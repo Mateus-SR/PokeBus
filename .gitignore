@@ -50,3 +50,113 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+# ==========================================
+# .NET / Visual Studio
+# ==========================================
+
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+.vscode/
+.idea/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.sln.iml
+
+# ==========================================
+# NuGet
+# ==========================================
+
+*.nupkg
+*.snupkg
+.nuget/
+
+# ==========================================
+# Build e compilação
+# ==========================================
+
+artifacts/
+publish/
+[Tt]est[Rr]esult*/
+BenchmarkDotNet.Artifacts/
+
+# ==========================================
+# .NET MAUI
+# ==========================================
+
+.maui/
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.appinstaller
+*.apk
+*.aab
+*.ipa
+*.dSYM/
+
+# ==========================================
+# Android
+# ==========================================
+
+**/Generated/
+**/AndroidManifest.xml.user
+*.keystore
+*.jks
+
+# ==========================================
+# iOS / Mac Catalyst
+# ==========================================
+
+**/bin/iPhoneSimulator/
+**/bin/iPhone/
+**/bin/AppleTVSimulator/
+**/bin/AppleTV/
+**/bin/MacCatalyst/
+
+# ==========================================
+# Windows
+# ==========================================
+
+Thumbs.db
+Desktop.ini
+*.tmp
+*.bak
+*.cache
+
+# ==========================================
+# Arquivos temporários
+# ==========================================
+
+*.log
+*.tmp
+*.temp
+*.old
+*~
+
+# ==========================================
+# Segredos e configurações locais
+# ==========================================
+
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.Local.json
+
+# ==========================================
+# Ferramentas e sistema operacional
+# ==========================================
+
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes

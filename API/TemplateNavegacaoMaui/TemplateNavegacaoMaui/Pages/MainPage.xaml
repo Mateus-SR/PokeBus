@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="TemplateNavegacaoMaui.Pages.MainPage"
+    Title="Radar de ônibus"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*"
+          Padding="20"
+          RowSpacing="14">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="5">
+            <Label Text="Radar de ônibus"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource PrimaryColor}" />
+
+            <Label Text="Previsões de chegada consultadas em tempo real"
+                   FontSize="14"
+                   TextColor="Gray" />
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="12">
+
+            <Label x:Name="StatusLabel"
+                   Text="Aguardando consulta..."
+                   VerticalOptions="Center"
+                   FontSize="13"
+                   TextColor="Gray" />
+
+            <Button x:Name="AtualizarButton"
+                    Grid.Column="1"
+                    Text="Atualizar"
+                    Padding="14,9"
+                    Clicked="OnAtualizarClicked" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <CollectionView ItemsSource="{Binding Onibus}"
+                            SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout
+                        Spacing="8"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center">
+
+                        <Label Text="Nenhum veículo para exibir"
+                               FontSize="16"
+                               TextColor="Gray"
+                               HorizontalTextAlignment="Center" />
+
+                        <Label Text="Use Atualizar para consultar novamente."
+                               FontSize="13"
+                               TextColor="Gray"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Frame Padding="14"
+                               Margin="0,0,0,12"
+                               CornerRadius="14"
+                               HasShadow="False"
+                               BorderColor="#D8E5E2"
+                               BackgroundColor="White">
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="OnOnibusTapped" />
+                            </Frame.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="*,Auto,72"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="10"
+                                  RowSpacing="7">
+
+                                <!-- Linha -->
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="{Binding CodigoLetreiro}"
+                                       FontSize="21"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource PrimaryColor}" />
+
+                                <!-- Sentido -->
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="{Binding SentidoLinha}"
+                                       FontSize="14"
+                                       TextColor="#526B68"
+                                       VerticalOptions="Center" />
+
+                                <!-- Previsão -->
+                                <VerticalStackLayout
+                                    Grid.Column="1"
+                                    Grid.RowSpan="2"
+                                    Spacing="2"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="End">
+
+                                    <Label Text="PREVISÃO"
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="Gray"
+                                           HorizontalTextAlignment="End" />
+
+                                    <Label Text="{Binding Previsao}"
+                                           FontSize="23"
+                                           FontAttributes="Bold"
+                                           TextColor="#263D3A"
+                                           HorizontalTextAlignment="End" />
+                                </VerticalStackLayout>
+
+                                <!-- Sprite do Pokémon -->
+                                <Image Grid.Column="2"
+                                       Grid.RowSpan="2"
+                                       Source="{Binding PokemonSpriteUrl}"
+                                       WidthRequest="72"
+                                       HeightRequest="72"
+                                       Aspect="AspectFit"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center" />
+
+                            </Grid>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsVisible="False"
+                               IsRunning="False"
+                               Color="{StaticResource PrimaryColor}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+        </Grid>
+    </Grid>
+</ContentPage>

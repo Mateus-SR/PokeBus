@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="TemplateNavegacaoMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:TemplateNavegacaoMaui.Pages"
+    FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="White">
+
+    <!-- Item do menu lateral que contém as abas inferiores -->
+    <FlyoutItem Title="Área principal"
+                Route="principal">
+
+        <Tab Title="Início" Route="inicio">
+            <ShellContent
+                Title="Início"
+                ContentTemplate="{DataTemplate pages:MainPage}" />
+        </Tab>
+
+        <Tab Title="Conteúdo" Route="conteudo">
+            <ShellContent
+                Title="Conteúdo"
+                ContentTemplate="{DataTemplate pages:ContentPageTemplate}" />
+        </Tab>
+    </FlyoutItem>
+
+    <!-- Item independente do menu lateral -->
+    <FlyoutItem Title="Sobre" Route="sobre">
+        <ShellContent
+            Title="Sobre"
+            ContentTemplate="{DataTemplate pages:AboutPage}" />
+    </FlyoutItem>
+
+</Shell>
