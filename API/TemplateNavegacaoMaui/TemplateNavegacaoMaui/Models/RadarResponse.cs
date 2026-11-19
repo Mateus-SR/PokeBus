@@ -36,12 +36,16 @@ public sealed class Onibus : INotifyPropertyChanged
                 return;
 
             _pokemon = value;
+
             OnPropertyChanged();
             OnPropertyChanged(nameof(PokemonSpriteUrl));
+            OnPropertyChanged(nameof(PokemonName));
         }
     }
 
     public string? PokemonSpriteUrl => Pokemon?.SpriteUrl;
+
+    public string PokemonName => Pokemon?.Name ?? "Carregando...";
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

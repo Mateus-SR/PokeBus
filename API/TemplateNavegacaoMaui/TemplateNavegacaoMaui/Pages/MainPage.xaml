@@ -2,8 +2,9 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:TemplateNavegacaoMaui.Controls"
     x:Class="TemplateNavegacaoMaui.Pages.MainPage"
-    Title="Radar de ônibus"
+    Title="PokéBus Monitoramento"
     BackgroundColor="{StaticResource PageBackground}">
 
     <Grid RowDefinitions="Auto,Auto,*"
@@ -11,29 +12,44 @@
           RowSpacing="14">
 
         <VerticalStackLayout Grid.Row="0" Spacing="5">
-            <Label Text="Radar de ônibus"
-                   FontSize="28"
+            <Label Text="PokéBus Monitoramento"
+                   FontFamily="PokemonEmerald"
+                   FontSize="44"
                    FontAttributes="Bold"
                    TextColor="{StaticResource PrimaryColor}" />
 
-            <Label Text="Previsões de chegada consultadas em tempo real"
-                   FontSize="14"
+            <Label Text="Previsões de chegada consultadas em tempo real, usando como base o Backend do Busca Bus, nosso Projeto Integrado do 4º semestre."
+                   FontFamily="PokemonEmerald"
+                   FontSize="30"
                    TextColor="Gray" />
         </VerticalStackLayout>
 
         <Grid Grid.Row="1"
-              ColumnDefinitions="*,Auto"
-              ColumnSpacing="12">
+              ColumnDefinitions="*,Auto,Auto"
+              ColumnSpacing="15">
 
-            <Label x:Name="StatusLabel"
+            <Label Grid.Column="1"
+                x:Name="StatusLabel"
                    Text="Aguardando consulta..."
+                   FontFamily="PokemonEmerald"
                    VerticalOptions="Center"
-                   FontSize="13"
+                   FontSize="24"
+                   TextColor="Gray" />
+            
+            <Label
+                Grid.Column="0"
+                   x:Name="InfoCard"
+                   Text="Clique em um card para ver informações sobre o Pokémon."
+                   FontFamily="PokemonEmerald"
+                   VerticalOptions="Center"
+                   FontSize="24"
                    TextColor="Gray" />
 
-            <Button x:Name="AtualizarButton"
-                    Grid.Column="1"
+            <Button Grid.Column="2"
+                x:Name="AtualizarButton"
+                    FontSize="24"
                     Text="Atualizar"
+                    FontFamily="PokemonEmerald"
                     Padding="14,9"
                     Clicked="OnAtualizarClicked" />
         </Grid>
@@ -50,89 +66,102 @@
                         HorizontalOptions="Center">
 
                         <Label Text="Nenhum veículo para exibir"
-                               FontSize="16"
+                               FontFamily="PokemonEmerald"
+                               FontSize="26"
                                TextColor="Gray"
                                HorizontalTextAlignment="Center" />
 
                         <Label Text="Use Atualizar para consultar novamente."
-                               FontSize="13"
+                               FontFamily="PokemonEmerald"
+                               FontSize="26"
                                TextColor="Gray"
                                HorizontalTextAlignment="Center" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-                        <Frame Padding="14"
-                               Margin="0,0,0,12"
-                               CornerRadius="14"
-                               HasShadow="False"
-                               BorderColor="#D8E5E2"
-                               BackgroundColor="White">
+                        <Frame Padding="8"
+               Margin="40"
+               CornerRadius="60"
+               HasShadow="False"
+               BorderColor="#D8E5E2"
+               BackgroundColor="White">
 
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Tapped="OnOnibusTapped" />
+                    Tapped="OnOnibusTapped" />
                             </Frame.GestureRecognizers>
 
-                            <Grid ColumnDefinitions="*,Auto,72"
-                                  RowDefinitions="Auto,Auto"
-                                  ColumnSpacing="10"
-                                  RowSpacing="7">
+                            <Grid ColumnDefinitions="*,Auto,144"
+                  ColumnSpacing="10">
 
-                                <!-- Linha -->
-                                <Label Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="{Binding CodigoLetreiro}"
-                                       FontSize="21"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource PrimaryColor}" />
+                                <!-- Informações da linha -->
+                                <VerticalStackLayout
+                    Grid.Column="0"
+                    Margin="20"
+                    Spacing="5"
+                    VerticalOptions="Center">
 
-                                <!-- Sentido -->
-                                <Label Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="{Binding SentidoLinha}"
-                                       FontSize="14"
-                                       TextColor="#526B68"
-                                       VerticalOptions="Center" />
+                                    <!-- Código da linha -->
+                                    <Label Text="{Binding CodigoLetreiro}"
+                           FontSize="54"
+                           TextColor="{StaticResource PrimaryColor}"
+                                           FontFamily="PokemonEmerald"/>
+
+                                    <!-- Sentido -->
+                                    <Label Text="{Binding SentidoLinha}"
+                           FontSize="34"
+                           TextColor="{StaticResource PrimaryColor}"
+                                           FontFamily="PokemonEmerald"/>
+
+                                    <!-- Nome do Pokémon -->
+                                    <Label Text="{Binding PokemonName}"
+                           FontSize="30"
+                                           FontFamily="PokemonEmerald"
+                          
+                           TextColor="#263D3A" />
+
+                                </VerticalStackLayout>
 
                                 <!-- Previsão -->
                                 <VerticalStackLayout
-                                    Grid.Column="1"
-                                    Grid.RowSpan="2"
-                                    Spacing="2"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="End">
+                    Grid.Column="1"
+                    Spacing="2"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End">
 
                                     <Label Text="PREVISÃO"
-                                           FontSize="10"
-                                           FontAttributes="Bold"
-                                           TextColor="Gray"
-                                           HorizontalTextAlignment="End" />
+                                           FontFamily="PokemonEmerald"
+                           FontSize="30"
+                           TextColor="Gray"
+                           HorizontalTextAlignment="End" />
 
                                     <Label Text="{Binding Previsao}"
-                                           FontSize="23"
-                                           FontAttributes="Bold"
-                                           TextColor="#263D3A"
-                                           HorizontalTextAlignment="End" />
+                                           FontFamily="PokemonEmerald"
+                           FontSize="54"
+                           TextColor="#263D3A"
+                           HorizontalTextAlignment="End" />
+
                                 </VerticalStackLayout>
 
                                 <!-- Sprite do Pokémon -->
-                                <Image Grid.Column="2"
-                                       Grid.RowSpan="2"
-                                       Source="{Binding PokemonSpriteUrl}"
-                                       WidthRequest="72"
-                                       HeightRequest="72"
-                                       Aspect="AspectFit"
-                                       VerticalOptions="Center"
-                                       HorizontalOptions="Center" />
+                                <controls:PokemonSpriteView
+    Grid.Column="2"
+    Url="{Binding PokemonSpriteUrl}"
+    WidthRequest="144"
+    HeightRequest="144"
+    VerticalOptions="Center"
+    HorizontalOptions="Center" />
 
                             </Grid>
                         </Frame>
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+
 
             </CollectionView>
 
