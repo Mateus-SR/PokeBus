@@ -28,10 +28,21 @@ public partial class BatalhaPage : ContentPage
         InitializeComponent();
     }
 
+    private async void OnTentarNovamenteClicked(
+    object sender, EventArgs e)
+    {
+        await ExibirBatalhaAsync();
+    }
+
     private async Task ExibirBatalhaAsync()
     {
+        StatusLabel.Text = "Tentando gerar a narração...";
+
         if (_batalha == null)
             return;
+
+        TentarNovamenteButton.IsEnabled = false;
+        TentarNovamenteButton.IsVisible = false;
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -89,6 +100,9 @@ public partial class BatalhaPage : ContentPage
                     "O resultado foi calculado normalmente, mas houve um erro na narração.\n\n" +
                     ex.Message + "\n\n" +
                     _batalha.Relatorio;
+
+                TentarNovamenteButton.IsVisible = true;
+                TentarNovamenteButton.IsEnabled = true;
 
                 LoadingIndicator.IsRunning = false;
                 LoadingIndicator.IsVisible = false;

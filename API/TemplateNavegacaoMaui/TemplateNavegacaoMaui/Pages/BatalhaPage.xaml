@@ -107,6 +107,15 @@
                    LineBreakMode="WordWrap"
                    TextColor="{StaticResource PrimaryColor}" />
 
+            <Button
+    x:Name="TentarNovamenteButton"
+    Text="TENTAR NOVAMENTE"
+    Clicked="OnTentarNovamenteClicked"
+    IsVisible="False"
+    BackgroundColor="{StaticResource Primary}"
+    TextColor="White"
+    FontFamily="PokemonEmerald" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

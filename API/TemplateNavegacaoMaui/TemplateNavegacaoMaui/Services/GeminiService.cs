@@ -14,7 +14,7 @@ public sealed class GeminiService
     private const string ApiUrl =
         "https://generativelanguage.googleapis.com/v1beta/interactions";
 
-    private const string Model = "gemini-3.8-flash";
+    private const string Model = "gemini-3.1-flash-lite";
 
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
@@ -64,13 +64,14 @@ public sealed class GeminiService
 
             system_instruction =
                 """
-                Você é um narrador de batalhas Pokémon em estilo anime.
+                Você é um narrador de batalhas Pokémon no estilo dos jogos clássicos.
 
-                Narre batalhas entre Pokémon associados a ônibus.
+                Narre batalhas entre Pokémon associados a ônibus. Imagine que os ônibus são os treinadores e que os Pokémons os representam.
                 Sua narração deve ser empolgante, dramática e divertida,
                 como um episódio de anime Pokémon.
 
                 REGRAS OBRIGATÓRIAS:
+                - Não use estilização markdown: o ambiente que receberá os textos não aceitará eles. Use sempre texto plano.
                 - Narre em português brasileiro.
                 - Respeite integralmente os acontecimentos do relatório.
                 - Não invente ataques, danos, resultados ou acontecimentos.
@@ -79,7 +80,7 @@ public sealed class GeminiService
                 - Valorize os momentos decisivos da batalha.
                 - Use diálogos e exclamações com moderação.
                 - Produza uma narração dividida por turnos.
-                - Termine com uma declaração emocionante do vencedor.
+                - Termine com uma declaração emocionante do vencedor, mencionando a linha do onibus e o nome inteiro dele.
                 """,
 
             input = relatorio,
