@@ -16,7 +16,7 @@ public partial class MainPage : ContentPage
 
     private bool _jaCarregou;
 
-    public ObservableCollection<Onibus> Onibus { get; } = [];
+    public ObservableCollection<Onibus> Onibus => OnibusStore.Onibus;
 
     public MainPage()
     {

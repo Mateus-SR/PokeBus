@@ -73,6 +73,7 @@ public sealed class PokemonService
         }
     }
 
+
     private static PokemonInfo ConverterResposta(PokemonApiResponse response)
     {
         var cultura = CultureInfo.InvariantCulture;
@@ -102,6 +103,14 @@ public sealed class PokemonService
             )
         );
 
+        // Recupera os atributos individualmente.
+        int ObterStat(string nomeStat)
+        {
+            return response.Stats.FirstOrDefault(
+                x => x.Stat.Name == nomeStat
+            )?.BaseStat ?? 0;
+        }
+
         var sprite = response.Sprites.FrontDefault ??
                      response.Sprites.Other?.OfficialArtwork?.FrontDefault ??
                      string.Empty;
@@ -111,14 +120,28 @@ public sealed class PokemonService
             Id = response.Id,
             Name = nome,
             SpriteUrl = sprite,
+
             HeightText = $"{(response.Height / 10m).ToString("0.0", cultura)} m",
             WeightText = $"{(response.Weight / 10m).ToString("0.0", cultura)} kg",
+
             TypesText = tipos,
             AbilitiesText = habilidades,
             BaseExperienceText = response.BaseExperience?.ToString() ?? "Não informado",
-            StatsText = estatisticas
+            StatsText = estatisticas,
+
+            Types = response.Types
+                .Select(x => x.Type.Name)
+                .ToList(),
+
+            Hp = ObterStat("hp"),
+            Attack = ObterStat("attack"),
+            Defense = ObterStat("defense"),
+            SpecialAttack = ObterStat("special-attack"),
+            SpecialDefense = ObterStat("special-defense"),
+            Speed = ObterStat("speed")
         };
     }
+
 
     private static string FormatarNome(string nome)
     {
