@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="TemplateNavegacaoMaui.Pages.AboutPage"
-    Title="Sobre"
-    BackgroundColor="{StaticResource PageBackground}">
-
-    <VerticalStackLayout Padding="24" Spacing="16"
-                         VerticalOptions="Center">
-        <Label Text="Sobre o aplicativo"
-               FontSize="26" FontAttributes="Bold"
-               TextColor="{StaticResource PrimaryColor}"
-               HorizontalTextAlignment="Center" />
-        <Label Text="Página independente acessada pelo menu lateral. Use este espaço para apresentar o projeto."
-               HorizontalTextAlignment="Center" />
-    </VerticalStackLayout>
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  x:Class="TemplateNavegacaoMaui.Pages.AboutPage"
+  Title="Sobre"
+  BackgroundColor="{StaticResource PageBackground}"
+>
+  <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
+    <Label
+      Text="Sobre o projeto"
+      FontSize="40"
+      FontAttributes="Bold"
+      TextColor="{StaticResource PrimaryColor}"
+      HorizontalTextAlignment="Center"
+      FontFamily="PokemonEmerald"
+    />
+    <Label
+      Text="Esse projeto é um aplicativo de exemplo desenvolvido em .NET MAUI, inspirado no universo Pokémon, no uso de IA Generativa e no projeto Busca Bus, PI do 4º Semestre de DSM. Ele demonstra a navegação entre páginas (pilha, menu lateral, aba), o uso de recursos visuais e a integração com APIs externas, comunicando entre si para a construção de uma nova aplicação."
+      HorizontalTextAlignment="Center"
+      FontFamily="PokemonEmerald"
+      TextColor="#000000"
+      FontSize="30"
+    />
+    <Label
+      Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
+      HorizontalTextAlignment="Center"
+      FontFamily="PokemonEmerald"
+      TextColor="#000000"
+      FontSize="30"
+    />
+        <Label
+      Text="Para associar um Pokémon a um ônibus, usamos os últimos 3 digitos do ID do veículo, que são convertidos em um número entre 1 e 999, (infelizmente sacrificando números maiores que 999). O Pokémon cujo ID na PokéDex corresponde a esse número é então associado ao ônibus."
+      HorizontalTextAlignment="Center"
+      FontFamily="PokemonEmerald"
+      TextColor="Gray"
+      FontSize="30"
+    />
+  </VerticalStackLayout>
 </ContentPage>

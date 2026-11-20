@@ -1,24 +1,19 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using TemplateNavegacaoMaui.Models;
 
 namespace TemplateNavegacaoMaui.Services;
 
 public sealed class BatalhaService
 {
-    private const int MaximoTurnos = 10;
+    private const int MaximoTurnos = 6;
 
     public BatalhaPokemon SimularBatalha(Onibus onibusA, Onibus onibusB)
     {
         if (onibusA.Pokemon == null || onibusB.Pokemon == null)
-            throw new ArgumentException(
-                "Os dois ônibus precisam ter Pokémon carregados."
-            );
+            throw new ArgumentException("Os dois ônibus precisam ter Pokémon carregados.");
 
         if (onibusA == onibusB)
-            throw new ArgumentException(
-                "Um ônibus não pode batalhar contra ele mesmo."
-            );
+            throw new ArgumentException("Um ônibus não pode batalhar contra ele mesmo.");
 
         var participanteA = CriarParticipante(onibusA);
         var participanteB = CriarParticipante(onibusB);
@@ -26,30 +21,23 @@ public sealed class BatalhaService
         var batalha = new BatalhaPokemon
         {
             ParticipanteA = participanteA,
-            ParticipanteB = participanteB
+            ParticipanteB = participanteB,
         };
 
         // O Pokémon mais rápido começa.
-        var atacante = participanteA.Pokemon.Speed >=
-                       participanteB.Pokemon.Speed
-            ? participanteA
-            : participanteB;
+        var atacante =
+            participanteA.Pokemon.Speed >= participanteB.Pokemon.Speed
+                ? participanteA
+                : participanteB;
 
-        var defensor = atacante == participanteA
-            ? participanteB
-            : participanteA;
+        var defensor = atacante == participanteA ? participanteB : participanteA;
 
         for (int turno = 1; turno <= MaximoTurnos; turno++)
         {
             if (atacante.EstaDerrotado || defensor.EstaDerrotado)
                 break;
 
-            ExecutarAtaque(
-                batalha,
-                atacante,
-                defensor,
-                turno
-            );
+            ExecutarAtaque(batalha, atacante, defensor, turno);
 
             batalha.TotalTurnos = turno;
 
@@ -78,7 +66,7 @@ public sealed class BatalhaService
             Onibus = onibus,
             Pokemon = pokemon,
             HpMaximo = hpMaximo,
-            HpAtual = hpMaximo
+            HpAtual = hpMaximo,
         };
     }
 
@@ -86,95 +74,71 @@ public sealed class BatalhaService
         BatalhaPokemon batalha,
         ParticipanteBatalha atacante,
         ParticipanteBatalha defensor,
-        int turno)
+        int turno
+    )
     {
         var pokemonAtacante = atacante.Pokemon;
         var pokemonDefensor = defensor.Pokemon;
 
         // Escolhe entre ataque físico e especial.
-        bool ataqueEspecial =
-            pokemonAtacante.SpecialAttack >= pokemonAtacante.Attack;
+        bool ataqueEspecial = pokemonAtacante.SpecialAttack >= pokemonAtacante.Attack;
 
-        int poderAtaque = ataqueEspecial
-            ? pokemonAtacante.SpecialAttack
-            : pokemonAtacante.Attack;
+        int poderAtaque = ataqueEspecial ? pokemonAtacante.SpecialAttack : pokemonAtacante.Attack;
 
-        int defesa = ataqueEspecial
-            ? pokemonDefensor.SpecialDefense
-            : pokemonDefensor.Defense;
+        int defesa = ataqueEspecial ? pokemonDefensor.SpecialDefense : pokemonDefensor.Defense;
 
-        string categoria = ataqueEspecial
-            ? "Especial"
-            : "Físico";
+        string categoria = ataqueEspecial ? "Especial" : "Físico";
 
         // Usa um dos tipos do Pokémon atacante.
-        string tipoAtaque = pokemonAtacante.Types.Count > 0
-            ? pokemonAtacante.Types[
-                Random.Shared.Next(pokemonAtacante.Types.Count)
-              ]
-            : "normal";
+        string tipoAtaque =
+            pokemonAtacante.Types.Count > 0
+                ? pokemonAtacante.Types[Random.Shared.Next(pokemonAtacante.Types.Count)]
+                : "normal";
 
-        double efetividade = CalcularEfetividade(
-            tipoAtaque,
-            pokemonDefensor.Types
-        );
+        double efetividade = CalcularEfetividade(tipoAtaque, pokemonDefensor.Types);
 
         // Pequena variação aleatória no dano.
         double variacao = Random.Shared.Next(85, 101) / 100.0;
 
-        double danoBase =
-            (poderAtaque * 0.65 + 8) *
-            (100.0 / (defesa + 100.0));
+        double danoBase = (poderAtaque * 0.65 + 8) * (100.0 / (defesa + 100.0));
 
-        int dano = Math.Max(
-            1,
-            (int)Math.Round(danoBase * efetividade * variacao)
-        );
+        int dano = Math.Max(1, (int)Math.Round(danoBase * efetividade * variacao));
 
-        defensor.HpAtual = Math.Max(
-            0,
-            defensor.HpAtual - dano
-        );
+        defensor.HpAtual = Math.Max(0, defensor.HpAtual - dano);
 
         string ataque = $"Ataque do tipo {FormatarTipo(tipoAtaque)}";
 
-        batalha.Eventos.Add(new EventoBatalha
-        {
-            Turno = turno,
-            Atacante = pokemonAtacante.Name,
-            Defensor = pokemonDefensor.Name,
-            Ataque = ataque,
-            Dano = dano,
-            Efetividade = efetividade,
-            HpRestante = defensor.HpAtual,
-            Categoria = categoria
-        });
+        batalha.Eventos.Add(
+            new EventoBatalha
+            {
+                Turno = turno,
+                Atacante = pokemonAtacante.Name,
+                Defensor = pokemonDefensor.Name,
+                Ataque = ataque,
+                Dano = dano,
+                Efetividade = efetividade,
+                HpRestante = defensor.HpAtual,
+                Categoria = categoria,
+            }
+        );
     }
 
-    private static double CalcularEfetividade(
-        string tipoAtaque,
-        List<string> tiposDefensor)
+    private static double CalcularEfetividade(string tipoAtaque, List<string> tiposDefensor)
     {
         double multiplicador = 1.0;
 
         foreach (var tipoDefensor in tiposDefensor)
         {
-            multiplicador *= ObterMultiplicador(
-                tipoAtaque,
-                tipoDefensor
-            );
+            multiplicador *= ObterMultiplicador(tipoAtaque, tipoDefensor);
         }
 
         return multiplicador;
     }
 
-    private static double ObterMultiplicador(
-        string ataque,
-        string defesa)
+    private static double ObterMultiplicador(string ataque, string defesa)
     {
         // Imunidades.
-        if ((ataque == "normal" || ataque == "fighting") &&
-            defesa == "ghost")
+        if ((ataque == "normal" || ataque == "fighting") && defesa == "ghost")
             return 0;
 
         if (ataque == "ghost" && defesa == "normal")
@@ -213,7 +177,7 @@ public sealed class BatalhaService
             "dark" => defesa is "psychic" or "ghost",
             "steel" => defesa is "ice" or "rock" or "fairy",
             "fairy" => defesa is "fighting" or "dragon" or "dark",
-            _ => false
+            _ => false,
         };
 
         if (superEfetivo)
@@ -226,21 +190,35 @@ public sealed class BatalhaService
             "fire" => defesa is "fire" or "water" or "rock" or "dragon",
             "water" => defesa is "water" or "grass" or "dragon",
             "electric" => defesa is "electric" or "grass" or "dragon",
-            "grass" => defesa is "fire" or "grass" or "poison" or "flying" or "bug" or "dragon" or "steel",
+            "grass" => defesa
+                is "fire"
+                    or "grass"
+                    or "poison"
+                    or "flying"
+                    or "bug"
+                    or "dragon"
+                    or "steel",
             "ice" => defesa is "fire" or "water" or "ice" or "steel",
             "fighting" => defesa is "poison" or "flying" or "psychic" or "bug" or "fairy",
             "poison" => defesa is "poison" or "ground" or "rock" or "ghost",
             "ground" => defesa is "grass" or "bug",
             "flying" => defesa is "electric" or "rock" or "steel",
             "psychic" => defesa is "psychic" or "steel",
-            "bug" => defesa is "fire" or "fighting" or "poison" or "flying" or "ghost" or "steel" or "fairy",
+            "bug" => defesa
+                is "fire"
+                    or "fighting"
+                    or "poison"
+                    or "flying"
+                    or "ghost"
+                    or "steel"
+                    or "fairy",
             "rock" => defesa is "fighting" or "ground" or "steel",
             "ghost" => defesa is "dark",
             "dragon" => defesa is "steel",
             "dark" => defesa is "fighting" or "dark" or "fairy",
             "steel" => defesa is "fire" or "water" or "electric" or "steel",
             "fairy" => defesa is "fire" or "poison" or "steel",
-            _ => false
+            _ => false,
         };
 
         return poucoEfetivo ? 0.5 : 1.0;
@@ -298,12 +276,12 @@ public sealed class BatalhaService
 
     private static int SomarAtributos(PokemonInfo pokemon)
     {
-        return pokemon.Hp +
-               pokemon.Attack +
-               pokemon.Defense +
-               pokemon.SpecialAttack +
-               pokemon.SpecialDefense +
-               pokemon.Speed;
+        return pokemon.Hp
+            + pokemon.Attack
+            + pokemon.Defense
+            + pokemon.SpecialAttack
+            + pokemon.SpecialDefense
+            + pokemon.Speed;
     }
 
     private static string GerarRelatorio(BatalhaPokemon batalha)
@@ -317,11 +295,11 @@ public sealed class BatalhaService
         sb.AppendLine();
 
         sb.AppendLine(
-            $"{a.Pokemon.Name} (Linha {a.Onibus.CodigoLetreiro})"
+            $"{a.Pokemon.Name} (Linha {a.Onibus.CodigoLetreiro}, Sentido {a.Onibus.SentidoLinha})"
         );
 
         sb.AppendLine(
-            $"{b.Pokemon.Name} (Linha {b.Onibus.CodigoLetreiro})"
+            $"{b.Pokemon.Name} (Linha {b.Onibus.CodigoLetreiro}, Sentido {b.Onibus.SentidoLinha})"
         );
 
         sb.AppendLine();
@@ -331,21 +309,13 @@ public sealed class BatalhaService
         foreach (var evento in batalha.Eventos)
         {
             sb.AppendLine($"Turno {evento.Turno}:");
-            sb.AppendLine(
-                $"{evento.Atacante} usou {evento.Ataque}."
-            );
+            sb.AppendLine($"{evento.Atacante} usou {evento.Ataque}.");
 
-            sb.AppendLine(
-                $"Categoria: {evento.Categoria}; dano: {evento.Dano}."
-            );
+            sb.AppendLine($"Categoria: {evento.Categoria}; dano: {evento.Dano}.");
 
-            sb.AppendLine(
-                $"Efetividade: {evento.Efetividade}x."
-            );
+            sb.AppendLine($"Efetividade: {evento.Efetividade}x.");
 
-            sb.AppendLine(
-                $"HP restante de {evento.Defensor}: {evento.HpRestante}."
-            );
+            sb.AppendLine($"HP restante de {evento.Defensor}: {evento.HpRestante}.");
 
             sb.AppendLine();
         }
@@ -356,9 +326,7 @@ public sealed class BatalhaService
         }
         else if (batalha.Vencedor != null)
         {
-            sb.AppendLine(
-                $"VENCEDOR: {batalha.Vencedor.Pokemon.Name}."
-            );
+            sb.AppendLine($"VENCEDOR: {batalha.Vencedor.Pokemon.Name}.");
         }
 
         return sb.ToString();
@@ -385,7 +353,7 @@ public sealed class BatalhaService
             "dark" => "Sombrio",
             "steel" => "Aço",
             "fairy" => "Fada",
-            _ => "Normal"
+            _ => "Normal",
         };
     }
 }

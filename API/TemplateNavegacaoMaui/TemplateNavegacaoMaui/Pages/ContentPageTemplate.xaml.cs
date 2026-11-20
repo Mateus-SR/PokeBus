@@ -1,4 +1,3 @@
-
 using TemplateNavegacaoMaui.Models;
 using TemplateNavegacaoMaui.Services;
 
@@ -24,14 +23,11 @@ public partial class ContentPageTemplate : ContentPage
 
     private void AtualizarStatus()
     {
-        var disponiveis = OnibusStore.Onibus
-            .Count(onibus => onibus.Pokemon != null);
+        var disponiveis = OnibusStore.Onibus.Count(onibus => onibus.Pokemon != null);
 
-        QuantidadeLabel.Text =
-            $"{disponiveis} Pokémon disponíveis para batalha.";
+        QuantidadeLabel.Text = $"{disponiveis} Pokémon disponíveis para batalha.";
 
-        BatalharButton.IsEnabled =
-            disponiveis >= 2 && !_batalhaEmAndamento;
+        BatalharButton.IsEnabled = disponiveis >= 2 && !_batalhaEmAndamento;
     }
 
     private async void OnBatalharClicked(object sender, EventArgs e)
@@ -39,9 +35,7 @@ public partial class ContentPageTemplate : ContentPage
         if (_batalhaEmAndamento)
             return;
 
-        var disponiveis = OnibusStore.Onibus
-            .Where(onibus => onibus.Pokemon != null)
-            .ToList();
+        var disponiveis = OnibusStore.Onibus.Where(onibus => onibus.Pokemon != null).ToList();
 
         if (disponiveis.Count < 2)
         {
@@ -69,33 +63,22 @@ public partial class ContentPageTemplate : ContentPage
             do
             {
                 indiceB = Random.Shared.Next(disponiveis.Count);
-            }
-            while (indiceA == indiceB);
+            } while (indiceA == indiceB);
 
             var onibusA = disponiveis[indiceA];
             var onibusB = disponiveis[indiceB];
 
             // Calcula o resultado antes de abrir a página.
-            var batalha = _batalhaService.SimularBatalha(
-                onibusA,
-                onibusB
-            );
+            var batalha = _batalhaService.SimularBatalha(onibusA, onibusB);
 
             await Shell.Current.GoToAsync(
                 nameof(BatalhaPage),
-                new Dictionary<string, object>
-                {
-                    ["Batalha"] = batalha
-                }
+                new Dictionary<string, object> { ["Batalha"] = batalha }
             );
         }
         catch (Exception ex)
         {
-            await DisplayAlert(
-                "Erro ao iniciar batalha",
-                ex.Message,
-                "OK"
-            );
+            await DisplayAlert("Erro ao iniciar batalha", ex.Message, "OK");
         }
         finally
         {

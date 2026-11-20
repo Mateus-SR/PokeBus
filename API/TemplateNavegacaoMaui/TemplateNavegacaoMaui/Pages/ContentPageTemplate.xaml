@@ -1,66 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="TemplateNavegacaoMaui.Pages.ContentPageTemplate"
-    Title="Conteúdo"
-    BackgroundColor="{StaticResource PageBackground}">
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  x:Class="TemplateNavegacaoMaui.Pages.ContentPageTemplate"
+  Title="Conteúdo"
+  BackgroundColor="{StaticResource PageBackground}"
+>
+  <ScrollView>
+    <VerticalStackLayout Padding="24" Spacing="22" VerticalOptions="Center">
+      <Label
+        Text="POKÉBUS ARENA"
+        FontFamily="PokemonEmerald"
+        FontSize="42"
+        FontAttributes="Bold"
+        HorizontalTextAlignment="Center"
+        TextColor="{StaticResource PrimaryColor}"
+      />
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="24"
-            Spacing="22"
-            VerticalOptions="Center">
+      <Label
+        Text="Prepare-se para o confronto!"
+        FontFamily="PokemonEmerald"
+        FontSize="30"
+        FontAttributes="Bold"
+        HorizontalTextAlignment="Center"
+        TextColor="Gray"
+      />
 
-            <Label Text="POKÉBUS ARENA"
-                   FontFamily="PokemonEmerald"
-                   FontSize="42"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{StaticResource PrimaryColor}" />
+      <BoxView HeightRequest="2" Color="{StaticResource PrimaryColor}" />
 
-            <Label Text="Prepare-se para o confronto!"
-                   FontFamily="PokemonEmerald"
-                   FontSize="25"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Gray" />
+      <Label
+        Text="BATALHAS ALEATÓRIAS"
+        FontFamily="PokemonEmerald"
+        FontSize="30"
+        HorizontalTextAlignment="Center"
+        TextColor="{StaticResource PrimaryColor}"
+      />
 
-            <BoxView HeightRequest="2"
-                     Color="{StaticResource PrimaryColor}" />
+      <Label
+        Text="Dois ônibus serão sorteados entre os veículos monitorados.&#10;Seus Pokémon lutarão em uma batalha decidida pelos próprios atributos."
+        FontFamily="PokemonEmerald"
+        FontSize="26"
+        HorizontalTextAlignment="Center"
+        TextColor="{StaticResource PrimaryColor}"
+      />
 
-            <Label Text="BATALHAS ALEATÓRIAS"
-                   FontFamily="PokemonEmerald"
-                   FontSize="30"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{StaticResource PrimaryColor}" />
+      <Label
+        x:Name="QuantidadeLabel"
+        Text="Verificando Pokémon disponíveis..."
+        FontFamily="PokemonEmerald"
+        FontSize="26"
+        HorizontalTextAlignment="Center"
+        TextColor="Gray"
+      />
 
-            <Label Text="Dois ônibus serão sorteados entre os veículos monitorados. Seus Pokémon lutarão em uma batalha decidida pelos próprios atributos."
-                   FontFamily="PokemonEmerald"
-                   FontSize="20"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{StaticResource PrimaryColor}" />
+      <Button
+        x:Name="BatalharButton"
+        Text="Sortear batalha"
+        FontFamily="PokemonEmerald"
+        FontSize="28"
+        Padding="20,14"
+        HorizontalOptions="Center"
+        Clicked="OnBatalharClicked"
+        IsEnabled="False"
+      />
 
-            <Label x:Name="QuantidadeLabel"
-                   Text="Verificando Pokémon disponíveis..."
-                   FontFamily="PokemonEmerald"
-                   FontSize="20"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Gray" />
-
-            <Button x:Name="BatalharButton"
-                    Text="Sortear batalha"
-                    FontFamily="PokemonEmerald"
-                    FontSize="28"
-                    Padding="20,14"
-                    HorizontalOptions="Center"
-                    Clicked="OnBatalharClicked"
-                    IsEnabled="False" />
-
-            <Label Text="A narração será produzida pelo Gemini AI."
-                   FontFamily="PokemonEmerald"
-                   FontSize="17"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Gray" />
-
-        </VerticalStackLayout>
-    </ScrollView>
+      <Label
+        Text="A narração será produzida pelo Gemini AI,&#10;com base nas estastísticas de cada Pokémon (vinda da PokeAPI)&#10;e na simulação da batalha feita em segundo plano.&#10;Os Pokémons representam os ônibus."
+        FontFamily="PokemonEmerald"
+        FontSize="26"
+        HorizontalTextAlignment="Center"
+        TextColor="Gray"
+      />
+    </VerticalStackLayout>
+  </ScrollView>
 </ContentPage>
