@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -17,19 +16,16 @@ public sealed class PokemonService
     private readonly HttpClient _httpClient;
 
     private readonly ConcurrentDictionary<int, PokemonInfo> _cache = new();
+    private readonly ConcurrentDictionary<string, GolpePokemon> _cacheGolpes = new();
 
     public PokemonService()
     {
-        _httpClient = new HttpClient
-        {
-            Timeout = TimeSpan.FromSeconds(30)
-        };
+        _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
     }
 
     public PokemonService(HttpClient httpClient)
     {
-        _httpClient = httpClient
-            ?? throw new ArgumentNullException(nameof(httpClient));
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
     public async Task<PokemonInfo?> ObterPokemonAsync(int id)
@@ -49,13 +45,26 @@ public sealed class PokemonService
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            var pokemon = await response.Content
-                .ReadFromJsonAsync<PokemonApiResponse>();
+            var pokemon = await response.Content.ReadFromJsonAsync<PokemonApiResponse>();
 
             if (pokemon == null)
                 return null;
 
             var info = ConverterResposta(pokemon);
+            info.Golpes = await ObterGolpesAsync(pokemon.Moves);
+
+            // Diagnóstico dos golpes carregados.
+            System.Diagnostics.Debug.WriteLine(
+                $"[POKEMON] {info.Name} - {info.Golpes.Count} golpes carregados:"
+            );
+
+            foreach (var golpe in info.Golpes)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[GOLPE] {golpe.Nome} | Tipo: {golpe.Tipo} | "
+                        + $"Categoria: {golpe.Categoria} | Potência: {golpe.Potencia}"
+                );
+            }
 
             return _cache.GetOrAdd(id, info);
         }
@@ -73,47 +82,116 @@ public sealed class PokemonService
         }
     }
 
+    private async Task<List<GolpePokemon>> ObterGolpesAsync(List<PokemonMoveSlot> movimentos)
+    {
+        var golpesSelecionados = new List<GolpePokemon>();
+
+        var candidatos = movimentos
+            .Where(m => m.VersionGroupDetails.Any(v => v.MoveLearnMethod.Name == "level-up"))
+            .Select(m => m.Move)
+            .Where(m => !string.IsNullOrWhiteSpace(m.Url))
+            .GroupBy(m => m.Name)
+            .Select(g => g.First())
+            .OrderBy(_ => Random.Shared.Next())
+            .ToList();
+
+        // Limite de consultas por Pokémon.
+        foreach (var candidato in candidatos.Take(16))
+        {
+            if (golpesSelecionados.Count >= 4)
+                break;
+
+            try
+            {
+                var golpe = await ObterDetalhesGolpeAsync(candidato.Url);
+
+                if (golpe == null)
+                    continue;
+
+                // Ignora golpes sem potência e golpes de status.
+                if (golpe.Potencia <= 0 || golpe.Categoria == "status")
+                    continue;
+
+                golpesSelecionados.Add(golpe);
+            }
+            catch (HttpRequestException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Erro ao consultar golpe {candidato.Name}: {ex.Message}"
+                );
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Erro ao interpretar golpe {candidato.Name}: {ex.Message}"
+                );
+            }
+        }
+
+        return golpesSelecionados;
+    }
+
+    private async Task<GolpePokemon?> ObterDetalhesGolpeAsync(string url)
+    {
+        if (_cacheGolpes.TryGetValue(url, out var golpeEmCache))
+            return golpeEmCache;
+
+        var resposta = await _httpClient.GetFromJsonAsync<MoveApiResponse>(url);
+
+        if (resposta == null)
+            return null;
+
+        var descricao = resposta.EffectEntries.FirstOrDefault(e => e.Language.Name == "en")?.Effect
+            ?? "Golpe ofensivo.";
+
+        var golpe = new GolpePokemon
+        {
+            Id = resposta.Id,
+            Nome = resposta.Name,
+            Tipo = resposta.Type.Name,
+            Categoria = resposta.DamageClass.Name,
+            Potencia = resposta.Power ?? 0,
+            Precisao = resposta.Accuracy ?? 100,
+            PP = resposta.Pp ?? 0,
+            Descricao = descricao,
+        };
+
+        return _cacheGolpes.GetOrAdd(url, golpe);
+    }
 
     private static PokemonInfo ConverterResposta(PokemonApiResponse response)
     {
         var cultura = CultureInfo.InvariantCulture;
 
-        var nome = cultura.TextInfo.ToTitleCase(
-            response.Name.Replace('-', ' ')
+        var nome = cultura.TextInfo.ToTitleCase(response.Name.Replace('-', ' '));
+
+        var tipos = string.Join(
+            " / ",
+            response.Types.Select(x => cultura.TextInfo.ToTitleCase(x.Type.Name))
         );
 
-        var tipos = string.Join(" / ",
-            response.Types.Select(x =>
-                cultura.TextInfo.ToTitleCase(x.Type.Name)
-            )
-        );
-
-        var habilidades = string.Join(", ",
+        var habilidades = string.Join(
+            ", ",
             response.Abilities.Select(x =>
-                cultura.TextInfo.ToTitleCase(
-                    x.Ability.Name.Replace('-', ' ')
-                ) + (x.IsHidden ? " (oculta)" : "")
+                cultura.TextInfo.ToTitleCase(x.Ability.Name.Replace('-', ' '))
+                + (x.IsHidden ? " (oculta)" : "")
             )
         );
 
         var estatisticas = string.Join(
             Environment.NewLine,
-            response.Stats.Select(x =>
-                $"{FormatarNome(x.Stat.Name)}: {x.BaseStat}"
-            )
+            response.Stats.Select(x => $"{FormatarNome(x.Stat.Name)}: {x.BaseStat}")
         );
 
         // Recupera os atributos individualmente.
         int ObterStat(string nomeStat)
         {
-            return response.Stats.FirstOrDefault(
-                x => x.Stat.Name == nomeStat
-            )?.BaseStat ?? 0;
+            return response.Stats.FirstOrDefault(x => x.Stat.Name == nomeStat)?.BaseStat ?? 0;
         }
 
-        var sprite = response.Sprites.FrontDefault ??
-                     response.Sprites.Other?.OfficialArtwork?.FrontDefault ??
-                     string.Empty;
+        var sprite = response.Sprites.FrontDefault
+            ?? response.Sprites.Other?.OfficialArtwork?.FrontDefault
+            ?? string.Empty;
 
         return new PokemonInfo
         {
@@ -129,27 +207,22 @@ public sealed class PokemonService
             BaseExperienceText = response.BaseExperience?.ToString() ?? "Não informado",
             StatsText = estatisticas,
 
-            Types = response.Types
-                .Select(x => x.Type.Name)
-                .ToList(),
+            Types = response.Types.Select(x => x.Type.Name).ToList(),
 
             Hp = ObterStat("hp"),
             Attack = ObterStat("attack"),
             Defense = ObterStat("defense"),
             SpecialAttack = ObterStat("special-attack"),
             SpecialDefense = ObterStat("special-defense"),
-            Speed = ObterStat("speed")
+            Speed = ObterStat("speed"),
         };
     }
-
 
     private static string FormatarNome(string nome)
     {
         var cultura = CultureInfo.InvariantCulture;
 
-        return cultura.TextInfo.ToTitleCase(
-            nome.Replace('-', ' ')
-        );
+        return cultura.TextInfo.ToTitleCase(nome.Replace('-', ' '));
     }
 
     // Classes de mapeamento da API
@@ -182,6 +255,9 @@ public sealed class PokemonService
 
         [JsonPropertyName("sprites")]
         public PokemonSprites Sprites { get; set; } = new();
+
+        [JsonPropertyName("moves")]
+        public List<PokemonMoveSlot> Moves { get; set; } = [];
     }
 
     public sealed class PokemonTypeSlot
@@ -212,6 +288,9 @@ public sealed class PokemonService
     {
         [JsonPropertyName("name")]
         public string Name { get; set; } = "";
+
+        [JsonPropertyName("url")]
+        public string Url { get; set; } = "";
     }
 
     public sealed class PokemonSprites
@@ -233,5 +312,60 @@ public sealed class PokemonService
     {
         [JsonPropertyName("front_default")]
         public string? FrontDefault { get; set; }
+    }
+
+    // Mapeamento dos golpes disponíveis do Pokémon.
+
+    public sealed class PokemonMoveSlot
+    {
+        [JsonPropertyName("move")]
+        public PokemonResource Move { get; set; } = new();
+
+        [JsonPropertyName("version_group_details")]
+        public List<PokemonMoveVersionDetail> VersionGroupDetails { get; set; } = [];
+    }
+
+    public sealed class PokemonMoveVersionDetail
+    {
+        [JsonPropertyName("move_learn_method")]
+        public PokemonResource MoveLearnMethod { get; set; } = new();
+    }
+
+    // Mapeamento dos detalhes individuais de cada golpe.
+
+    private sealed class MoveApiResponse
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+
+        [JsonPropertyName("power")]
+        public int? Power { get; set; }
+
+        [JsonPropertyName("accuracy")]
+        public int? Accuracy { get; set; }
+
+        [JsonPropertyName("pp")]
+        public int? Pp { get; set; }
+
+        [JsonPropertyName("type")]
+        public PokemonResource Type { get; set; } = new();
+
+        [JsonPropertyName("damage_class")]
+        public PokemonResource DamageClass { get; set; } = new();
+
+        [JsonPropertyName("effect_entries")]
+        public List<MoveEffectEntry> EffectEntries { get; set; } = [];
+    }
+
+    private sealed class MoveEffectEntry
+    {
+        [JsonPropertyName("effect")]
+        public string Effect { get; set; } = "";
+
+        [JsonPropertyName("language")]
+        public PokemonResource Language { get; set; } = new();
     }
 }

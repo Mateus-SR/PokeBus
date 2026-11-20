@@ -5,7 +5,7 @@ namespace TemplateNavegacaoMaui.Services;
 
 public sealed class BatalhaService
 {
-    private const int MaximoTurnos = 6;
+    private const int MaximoTurnos = 10;
 
     public BatalhaPokemon SimularBatalha(Onibus onibusA, Onibus onibusB)
     {
@@ -80,8 +80,28 @@ public sealed class BatalhaService
         var pokemonAtacante = atacante.Pokemon;
         var pokemonDefensor = defensor.Pokemon;
 
-        // Escolhe entre ataque físico e especial.
-        bool ataqueEspecial = pokemonAtacante.SpecialAttack >= pokemonAtacante.Attack;
+        // Seleciona um dos golpes disponíveis.
+        GolpePokemon golpe;
+
+        if (pokemonAtacante.Golpes.Count > 0)
+        {
+            golpe = pokemonAtacante.Golpes[Random.Shared.Next(pokemonAtacante.Golpes.Count)];
+        }
+        else
+        {
+            // Alternativa caso a PokeAPI não tenha carregado nenhum golpe.
+            golpe = new GolpePokemon
+            {
+                Nome = "struggle",
+                Tipo = "normal",
+                Categoria = "physical",
+                Potencia = 40,
+                Precisao = 100,
+            };
+        }
+
+        // Determina os atributos conforme a categoria do golpe.
+        bool ataqueEspecial = golpe.Categoria == "special";
 
         int poderAtaque = ataqueEspecial ? pokemonAtacante.SpecialAttack : pokemonAtacante.Attack;
 
@@ -89,24 +109,45 @@ public sealed class BatalhaService
 
         string categoria = ataqueEspecial ? "Especial" : "Físico";
 
-        // Usa um dos tipos do Pokémon atacante.
-        string tipoAtaque =
-            pokemonAtacante.Types.Count > 0
-                ? pokemonAtacante.Types[Random.Shared.Next(pokemonAtacante.Types.Count)]
-                : "normal";
+        // Calcula a efetividade do tipo do golpe.
+        double efetividade = CalcularEfetividade(golpe.Tipo, pokemonDefensor.Types);
 
-        double efetividade = CalcularEfetividade(tipoAtaque, pokemonDefensor.Types);
+        string nomeGolpe = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(
+            golpe.Nome.Replace('-', ' ')
+        );
 
-        // Pequena variação aleatória no dano.
-        double variacao = Random.Shared.Next(85, 101) / 100.0;
+        string ataque = $"{nomeGolpe} ({FormatarTipo(golpe.Tipo)})";
 
-        double danoBase = (poderAtaque * 0.65 + 8) * (100.0 / (defesa + 100.0));
+        int precisao = Math.Clamp(golpe.Precisao, 0, 100);
 
-        int dano = Math.Max(1, (int)Math.Round(danoBase * efetividade * variacao));
+        // Verifica se o golpe acertou.
+        bool acertou = Random.Shared.Next(1, 101) <= precisao;
 
-        defensor.HpAtual = Math.Max(0, defensor.HpAtual - dano);
+        int dano = 0;
 
-        string ataque = $"Ataque do tipo {FormatarTipo(tipoAtaque)}";
+        if (acertou && efetividade > 0)
+        {
+            // STAB: bônus de 50% quando o golpe compartilha
+            // um tipo com o Pokémon que o utiliza.
+            double stab = pokemonAtacante.Types.Contains(golpe.Tipo) ? 1.5 : 1.0;
+
+            // Variação aleatória no dano.
+            double variacao = Random.Shared.Next(85, 101) / 100.0;
+
+            double danoBase = (golpe.Potencia * 0.65 + 8) * (poderAtaque / (double)(defesa + 100));
+
+            dano = Math.Max(1, (int)Math.Round(danoBase * efetividade * stab * variacao));
+
+            defensor.HpAtual = Math.Max(0, defensor.HpAtual - dano);
+        }
+        else if (!acertou)
+        {
+            ataque += " (errou)";
+        }
+        else
+        {
+            ataque += " (sem efeito)";
+        }
 
         batalha.Eventos.Add(
             new EventoBatalha

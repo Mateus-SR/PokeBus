@@ -1,5 +1,4 @@
-﻿
-namespace TemplateNavegacaoMaui.Models;
+﻿namespace TemplateNavegacaoMaui.Models;
 
 public sealed class PokemonInfo
 {
@@ -16,6 +15,9 @@ public sealed class PokemonInfo
 
     // Tipos em formato utilizável pelo sistema de batalha.
     public List<string> Types { get; set; } = [];
+
+    // Quatro golpes disponíveis para o Pokémon.
+    public List<GolpePokemon> Golpes { get; set; } = [];
 
     // Atributos numéricos recebidos da PokeAPI.
     public int Hp { get; set; }

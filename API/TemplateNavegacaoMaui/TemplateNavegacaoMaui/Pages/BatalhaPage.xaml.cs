@@ -1,3 +1,4 @@
+using System.Text;
 using TemplateNavegacaoMaui.Models;
 using TemplateNavegacaoMaui.Services;
 
@@ -8,6 +9,141 @@ public partial class BatalhaPage : ContentPage
 {
     private readonly GeminiService _geminiService = new();
     private readonly BatalhaService _batalhaService = new();
+    private FormattedString _narracaoFormatada = new();
+    private readonly StringBuilder _bufferFormatacao = new();
+
+    private static readonly (string Texto, string Estilo, bool Abrir)[] Marcadores =
+    [
+        ("[[POKEMON]]", "POKEMON", true),
+        ("[[/POKEMON]]", "POKEMON", false),
+        ("[[HP]]", "HP", true),
+        ("[[/HP]]", "HP", false),
+        ("[[GOLPE]]", "GOLPE", true),
+        ("[[/GOLPE]]", "GOLPE", false),
+        ("[[ONIBUS]]", "ONIBUS", true),
+        ("[[/ONIBUS]]", "ONIBUS", false),
+    ];
+
+    private void ProcessarTextoFormatado(string trecho, bool finalizar = false)
+    {
+        _bufferFormatacao.Append(trecho);
+
+        while (true)
+        {
+            string conteudo = _bufferFormatacao.ToString();
+
+            int indiceMarcador = -1;
+            (string Texto, string Estilo, bool Abrir) marcadorEncontrado = default;
+
+            foreach (var marcador in Marcadores)
+            {
+                int indice = conteudo.IndexOf(marcador.Texto, StringComparison.Ordinal);
+
+                if (indice >= 0 && (indiceMarcador < 0 || indice < indiceMarcador))
+                {
+                    indiceMarcador = indice;
+                    marcadorEncontrado = marcador;
+                }
+            }
+
+            if (indiceMarcador >= 0)
+            {
+                if (indiceMarcador > 0)
+                {
+                    AdicionarTextoFormatado(conteudo.Substring(0, indiceMarcador));
+                }
+
+                _bufferFormatacao.Remove(0, indiceMarcador + marcadorEncontrado.Texto.Length);
+
+                _estiloAtual = marcadorEncontrado.Abrir ? marcadorEncontrado.Estilo : "NORMAL";
+
+                continue;
+            }
+
+            if (finalizar)
+            {
+                if (_bufferFormatacao.Length > 0)
+                {
+                    AdicionarTextoFormatado(_bufferFormatacao.ToString());
+                    _bufferFormatacao.Clear();
+                }
+
+                _estiloAtual = "NORMAL";
+                break;
+            }
+
+            // Mantém o possível início de um marcador dividido no streaming.
+            int preservar = 0;
+            int limite = Math.Min(Marcadores.Max(m => m.Texto.Length) - 1, conteudo.Length);
+
+            for (int tamanho = limite; tamanho > 0; tamanho--)
+            {
+                string final = conteudo.Substring(conteudo.Length - tamanho, tamanho);
+
+                if (Marcadores.Any(m => m.Texto.StartsWith(final, StringComparison.Ordinal)))
+                {
+                    preservar = tamanho;
+                    break;
+                }
+            }
+
+            int quantidade = _bufferFormatacao.Length - preservar;
+
+            if (quantidade > 0)
+            {
+                AdicionarTextoFormatado(_bufferFormatacao.ToString(0, quantidade));
+
+                _bufferFormatacao.Remove(0, quantidade);
+            }
+
+            break;
+        }
+    }
+
+    private void AdicionarTextoFormatado(string texto)
+    {
+        if (string.IsNullOrEmpty(texto))
+            return;
+
+        var span = new Span
+        {
+            Text = texto,
+            FontFamily = "PokemonEmerald",
+            FontSize = 30,
+            TextColor = Colors.Black,
+        };
+
+        switch (_estiloAtual)
+        {
+            case "POKEMON":
+                span.FontAttributes = FontAttributes.Bold;
+                break;
+
+            case "HP":
+                if (
+                    Application.Current?.Resources.TryGetValue("PrimaryColor", out var cor) == true
+                    && cor is Color corPrimaria
+                )
+                {
+                    span.TextColor = corPrimaria;
+                }
+                else
+                {
+                    span.TextColor = Colors.Red;
+                }
+
+                break;
+
+            case "GOLPE":
+            case "ONIBUS":
+                span.TextColor = Color.FromArgb("#1515f0");
+                break;
+        }
+
+        _narracaoFormatada.Spans.Add(span);
+    }
+
+    private string _estiloAtual = "NORMAL";
 
     private BatalhaPokemon? _batalha;
 
@@ -95,7 +231,11 @@ public partial class BatalhaPage : ContentPage
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             StatusLabel.Text = "O narrador está preparando a batalha...";
-            NarracaoLabel.Text = string.Empty;
+            _bufferFormatacao.Clear();
+            _estiloAtual = "NORMAL";
+
+            _narracaoFormatada = new FormattedString();
+            NarracaoLabel.FormattedText = _narracaoFormatada;
 
             PokemonAImage.Url = _batalha.ParticipanteA.Pokemon.SpriteUrl;
             PokemonBImage.Url = _batalha.ParticipanteB.Pokemon.SpriteUrl;
@@ -133,10 +273,14 @@ public partial class BatalhaPage : ContentPage
             {
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    NarracaoLabel.Text += trecho;
+                    ProcessarTextoFormatado(trecho);
                 });
             });
 
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                ProcessarTextoFormatado(string.Empty, finalizar: true);
+            });
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 StatusLabel.Text = "Batalha concluída!";
@@ -146,6 +290,7 @@ public partial class BatalhaPage : ContentPage
         {
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                NarracaoLabel.FormattedText = null;
                 StatusLabel.Text = "Não foi possível gerar a narração.";
 
                 NarracaoLabel.Text =

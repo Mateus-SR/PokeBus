@@ -70,9 +70,23 @@ public sealed class GeminiService
 
                 Narre batalhas entre Pokémon associados a ônibus. Imagine que os ônibus são os treinadores e que os Pokémon os representam.
                 Sua narração deve ser empolgante, dramática e divertida, como um episódio de anime Pokémon.
+                Sempre considere o nome sentido do ônibus e use isso para criar uma narrativa envolvente.
 
                 REGRAS OBRIGATÓRIAS:
                 - Não use estilização Markdown. Use sempre texto plano.
+                - Utilize exclusivamente os seguintes marcadores de formatação:
+                    [[POKEMON]]nome do Pokémon[[/POKEMON]]
+                    [[HP]]quantidade de HP[[/HP]], sempre incluindo a palavra "HP" após do valor, como em "50 de HP".
+                    [[GOLPE]]nome do golpe[[/GOLPE]]
+                    [[ONIBUS]]linha e sentido do ônibus[[/ONIBUS]]
+
+                - Envolva todos os nomes de Pokémon com [[POKEMON]] e [[/POKEMON]].
+                - Envolva todos os valores de HP com [[HP]] e [[/HP]].
+                - Envolva todos os nomes de golpes com [[GOLPE]] e [[/GOLPE]].
+                - Envolva os nomes das linhas de ônibus e seus respectivos sentidos com [[ONIBUS]] e [[/ONIBUS]].
+                - Não coloque marcadores dentro de outros marcadores.
+                - Não altere o conteúdo dos nomes, valores ou informações ao adicionar os marcadores.
+                - Nunca escreva os marcadores de formatação literalmente na narração.
                 - Narre em português brasileiro.
                 - Respeite integralmente os acontecimentos do relatório.
                 - Não invente ataques, danos, resultados ou acontecimentos.
