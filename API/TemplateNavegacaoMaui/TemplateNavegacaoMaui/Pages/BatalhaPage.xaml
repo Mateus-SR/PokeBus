@@ -167,16 +167,27 @@
           FontFamily="PokemonEmerald"
         />
 
-        <Button
-          x:Name="SortearNovamenteButton"
-          Text="SORTEAR NOVAMENTE"
-          Clicked="OnSortearNovamenteClicked"
-          IsVisible="False"
-          BackgroundColor="{StaticResource PrimaryColor}"
-          TextColor="White"
-          FontSize="34"
-          FontFamily="PokemonEmerald"
-        />
+        <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+          <Button
+            x:Name="VoltarButton"
+            Text="VOLTAR"
+            Clicked="OnBackClicked"
+            BackgroundColor="{StaticResource PrimaryColor}"
+            TextColor="White"
+            FontSize="34"
+            FontFamily="PokemonEmerald"
+          />
+          <Button
+            x:Name="SortearNovamenteButton"
+            Text="SORTEAR NOVAMENTE"
+            Clicked="OnSortearNovamenteClicked"
+            IsVisible="False"
+            BackgroundColor="{StaticResource PrimaryColor}"
+            TextColor="White"
+            FontSize="34"
+            FontFamily="PokemonEmerald"
+          />
+        </HorizontalStackLayout>
       </VerticalStackLayout>
     </ScrollView>
   </Grid>
