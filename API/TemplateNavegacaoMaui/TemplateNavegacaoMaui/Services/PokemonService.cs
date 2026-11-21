@@ -9,19 +9,15 @@ using TemplateNavegacaoMaui.Models;
 
 namespace TemplateNavegacaoMaui.Services;
 
-public sealed class PokemonService
+public sealed class PokemonService : IPokemonService
 {
     private const string BaseUrl = "https://pokeapi.co/api/v2/pokemon/";
 
     private readonly HttpClient _httpClient;
 
+    // Os caches só funcionam entre telas porque o serviço é registrado como singleton no MauiProgram.
     private readonly ConcurrentDictionary<int, PokemonInfo> _cache = new();
     private readonly ConcurrentDictionary<string, GolpePokemon> _cacheGolpes = new();
-
-    public PokemonService()
-    {
-        _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
-    }
 
     public PokemonService(HttpClient httpClient)
     {

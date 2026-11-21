@@ -3,7 +3,7 @@ using TemplateNavegacaoMaui.Models;
 
 namespace TemplateNavegacaoMaui.Services;
 
-public sealed class RadarService
+public sealed class RadarService : IRadarService
 {
     private const string Endpoint =
         "https://busca-bus-server.onrender.com/v1/exibicoes/UpilXc/radar"; // Endpoint usado no PI do 4º Semestre. Ele faz uma busca direta na API OlhoVivo da SPTrans

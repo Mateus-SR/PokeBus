@@ -5,12 +5,16 @@ namespace TemplateNavegacaoMaui.Pages;
 
 public partial class ContentPageTemplate : ContentPage
 {
-    private readonly BatalhaService _batalhaService = new();
+    private readonly IBatalhaService _batalhaService;
+    private readonly OnibusStore _onibusStore;
 
     private bool _batalhaEmAndamento;
 
-    public ContentPageTemplate()
+    public ContentPageTemplate(IBatalhaService batalhaService, OnibusStore onibusStore)
     {
+        _batalhaService = batalhaService;
+        _onibusStore = onibusStore;
+
         InitializeComponent();
     }
 
@@ -23,7 +27,7 @@ public partial class ContentPageTemplate : ContentPage
 
     private void AtualizarStatus()
     {
-        var disponiveis = OnibusStore.Onibus.Count(onibus => onibus.Pokemon != null);
+        var disponiveis = _onibusStore.Onibus.Count(onibus => onibus.Pokemon != null);
 
         QuantidadeLabel.Text = $"{disponiveis} Pokémon disponíveis para batalha.";
 
@@ -35,7 +39,7 @@ public partial class ContentPageTemplate : ContentPage
         if (_batalhaEmAndamento)
             return;
 
-        var disponiveis = OnibusStore.Onibus.Where(onibus => onibus.Pokemon != null).ToList();
+        var disponiveis = _onibusStore.Onibus.Where(onibus => onibus.Pokemon != null).ToList();
 
         if (disponiveis.Count < 2)
         {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TemplateNavegacaoMaui.Services;
 
-public sealed class GeminiService
+public sealed class GeminiService : IGeminiService
 {
     private const string ApiUrl =
         "https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse";
@@ -22,13 +22,6 @@ public sealed class GeminiService
 
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
-
-    public GeminiService()
-    {
-        _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(90) };
-
-        _apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? string.Empty;
-    }
 
     public GeminiService(HttpClient httpClient)
     {

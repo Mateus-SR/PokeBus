@@ -7,8 +7,9 @@ namespace TemplateNavegacaoMaui.Pages;
 [QueryProperty(nameof(Batalha), "Batalha")]
 public partial class BatalhaPage : ContentPage
 {
-    private readonly GeminiService _geminiService = new();
-    private readonly BatalhaService _batalhaService = new();
+    private readonly IGeminiService _geminiService;
+    private readonly IBatalhaService _batalhaService;
+    private readonly OnibusStore _onibusStore;
     private FormattedString _narracaoFormatada = new();
     private readonly StringBuilder _bufferFormatacao = new();
 
@@ -166,7 +167,7 @@ public partial class BatalhaPage : ContentPage
         try
         {
             // Obtém os ônibus que possuem Pokémon carregados.
-            var disponiveis = OnibusStore.Onibus.Where(onibus => onibus.Pokemon != null).ToList();
+            var disponiveis = _onibusStore.Onibus.Where(onibus => onibus.Pokemon != null).ToList();
 
             if (disponiveis.Count < 2)
             {
@@ -208,8 +209,15 @@ public partial class BatalhaPage : ContentPage
         }
     }
 
-    public BatalhaPage()
+    public BatalhaPage(
+        IGeminiService geminiService,
+        IBatalhaService batalhaService,
+        OnibusStore onibusStore)
     {
+        _geminiService = geminiService;
+        _batalhaService = batalhaService;
+        _onibusStore = onibusStore;
+
         InitializeComponent();
     }
 
