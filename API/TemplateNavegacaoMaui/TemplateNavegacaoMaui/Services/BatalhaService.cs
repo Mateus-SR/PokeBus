@@ -66,7 +66,10 @@ public sealed class BatalhaService : IBatalhaService
         var pokemon = onibus.Pokemon!;
 
         // O HP de combate é ampliado para permitir confrontos mais longos.
-        int hpMaximo = Math.Max(50, pokemon.Hp * 2 + 60);
+        int hpMaximo = Math.Max(
+            50,
+            pokemon.Hp - 10 + pokemon.Defense / 2 + pokemon.SpecialDefense / 2
+        );
 
         return new ParticipanteBatalha(onibus, pokemon, hpMaximo);
     }
