@@ -160,3 +160,6 @@ appsettings.Local.json
 ._*
 .Spotlight-V100
 .Trashes
+
+# Arquivos compactados (ex.: cópias do template)
+*.7z
