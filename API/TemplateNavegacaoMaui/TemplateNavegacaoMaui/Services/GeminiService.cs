@@ -132,6 +132,7 @@ public sealed class GeminiService : IGeminiService
                 - Múltiplas linhas por turno são permitidas.
                 - Siga o padrão:
                   [Turno X]: [Ação do Pokémon A] [Resultado da ação do Pokémon A] [Ação do Pokémon B] [Resultado da ação do Pokémon B].
+                - Considere a intensidade do golpe (HP perdido) para criar uma narrativa mais dramática e dinâmica.
 
                 MARCADORES DE PAUSA:
 
