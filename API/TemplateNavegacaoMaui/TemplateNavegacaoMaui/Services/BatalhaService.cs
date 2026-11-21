@@ -68,13 +68,7 @@ public sealed class BatalhaService : IBatalhaService
         // O HP de combate é ampliado para permitir confrontos mais longos.
         int hpMaximo = Math.Max(50, pokemon.Hp * 2 + 60);
 
-        return new ParticipanteBatalha
-        {
-            Onibus = onibus,
-            Pokemon = pokemon,
-            HpMaximo = hpMaximo,
-            HpAtual = hpMaximo,
-        };
+        return new ParticipanteBatalha(onibus, pokemon, hpMaximo);
     }
 
     private void ExecutarAtaque(
@@ -145,7 +139,7 @@ public sealed class BatalhaService : IBatalhaService
 
             dano = Math.Max(1, (int)Math.Round(danoBase * efetividade * stab * variacao));
 
-            defensor.HpAtual = Math.Max(0, defensor.HpAtual - dano);
+            defensor.ReceberDano(dano);
         }
         else if (!acertou)
         {

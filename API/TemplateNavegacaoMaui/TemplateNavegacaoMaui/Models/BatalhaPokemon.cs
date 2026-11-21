@@ -5,15 +5,29 @@ namespace TemplateNavegacaoMaui.Models;
 
 public sealed class ParticipanteBatalha
 {
-    public Onibus Onibus { get; set; } = null!;
+    public ParticipanteBatalha(Onibus onibus, PokemonInfo pokemon, int hpMaximo)
+    {
+        Onibus = onibus ?? throw new ArgumentNullException(nameof(onibus));
+        Pokemon = pokemon ?? throw new ArgumentNullException(nameof(pokemon));
+        HpMaximo = hpMaximo;
+        HpAtual = hpMaximo;
+    }
 
-    public PokemonInfo Pokemon { get; set; } = null!;
+    public Onibus Onibus { get; }
 
-    public int HpMaximo { get; set; }
+    public PokemonInfo Pokemon { get; }
 
-    public int HpAtual { get; set; }
+    public int HpMaximo { get; }
+
+    // Só o próprio participante altera o HP, por meio de ReceberDano.
+    public int HpAtual { get; private set; }
 
     public bool EstaDerrotado => HpAtual <= 0;
+
+    public void ReceberDano(int dano)
+    {
+        HpAtual = Math.Max(0, HpAtual - Math.Max(0, dano));
+    }
 }
 
 public sealed class EventoBatalha
@@ -37,9 +51,9 @@ public sealed class EventoBatalha
 
 public sealed class BatalhaPokemon
 {
-    public ParticipanteBatalha ParticipanteA { get; set; } = null!;
+    public required ParticipanteBatalha ParticipanteA { get; init; }
 
-    public ParticipanteBatalha ParticipanteB { get; set; } = null!;
+    public required ParticipanteBatalha ParticipanteB { get; init; }
 
     public List<EventoBatalha> Eventos { get; set; } = [];
 
