@@ -8,9 +8,9 @@ Cada ônibus em circulação vira um Pokémon: os **três últimos dígitos do I
 
 | Recurso | Para quê |
 | --- | --- |
-| **Olho Vivo (SPTrans)**, via backend do Busca Bus | Ônibus em circulação |
+| **Olho Vivo (SPTrans)**, via backend do Busca Bus | Ônibus em circulação, previsões de chegada |
 | **PokeAPI** | Dados, sprites e golpes dos Pokémon |
-| **Gemini API** | Narração da batalha em streaming |
+| **Gemini API** | Narração da batalha em streaming e tradução das descrições |
 
 Navegação: **Flyout** (Área principal / Sobre o projeto), **Tabs** (Monitoramento / Arena) e **pilha** (detalhes do Pokémon e tela da batalha).
 
