@@ -1,194 +1,177 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:controls="clr-namespace:TemplateNavegacaoMaui.Controls"
-  x:Class="TemplateNavegacaoMaui.Pages.BatalhaPage"
-  Title="Batalha PokéBus"
-  BackgroundColor="{StaticResource PageBackground}"
->
-  <Grid RowDefinitions="Auto,*" Margin="75,10" RowSpacing="12">
-    <!-- CABEÇALHO FIXO -->
-    <VerticalStackLayout Grid.Row="0">
-      <Label
-        Text="BATALHA POKÉBUS"
-        FontFamily="PokemonEmerald"
-        FontSize="38"
-        HorizontalTextAlignment="Center"
-        TextColor="{StaticResource PrimaryColor}"
-      />
+    x:Class="TemplateNavegacaoMaui.Pages.BatalhaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:TemplateNavegacaoMaui.Controls"
+    Title="Batalha PokéBus"
+    BackgroundColor="{StaticResource PageBackground}">
+    <Grid
+        Margin="75,10"
+        RowDefinitions="Auto,*"
+        RowSpacing="12">
+        <!--  CABEÇALHO FIXO  -->
+        <VerticalStackLayout Grid.Row="0">
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="38"
+                HorizontalTextAlignment="Center"
+                Text="BATALHA POKÉBUS"
+                TextColor="{StaticResource PrimaryColor}" />
 
-      <Grid ColumnDefinitions="*,*">
-        <!-- POKÉMON A -->
-        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
-          <controls:PokemonSpriteView
-            x:Name="PokemonAImage"
-            WidthRequest="216"
-            HeightRequest="216"
-            Url=""
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            ScaleX="-1"
-          />
+            <Grid ColumnDefinitions="*,*">
+                <!--  POKÉMON A  -->
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <controls:PokemonSpriteView
+                        x:Name="PokemonAImage"
+                        HeightRequest="216"
+                        HorizontalOptions="End"
+                        ScaleX="-1"
+                        Url=""
+                        VerticalOptions="Center"
+                        WidthRequest="216" />
 
-          <Label
-            x:Name="PokemonALabel"
-            FontFamily="PokemonEmerald"
-            FontSize="36"
-            HorizontalTextAlignment="Center"
-            TextColor="{StaticResource PrimaryColor}"
-          />
+                    <Label
+                        x:Name="PokemonALabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="36"
+                        HorizontalTextAlignment="Center"
+                        TextColor="{StaticResource PrimaryColor}" />
 
-          <Label
-            x:Name="LinhaALabel"
-            FontFamily="PokemonEmerald"
-            FontSize="26"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
+                    <Label
+                        x:Name="LinhaALabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="26"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
 
-          <Label
-            x:Name="SentidoALabel"
-            FontFamily="PokemonEmerald"
-            FontSize="26"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
+                    <Label
+                        x:Name="SentidoALabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="26"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
 
-          <Label
-            x:Name="HpALabel"
-            FontFamily="PokemonEmerald"
-            FontSize="20"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
+                    <Label
+                        x:Name="HpALabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
+                </VerticalStackLayout>
+
+                <!--  POKÉMON B  -->
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <controls:PokemonSpriteView
+                        x:Name="PokemonBImage"
+                        HeightRequest="216"
+                        HorizontalOptions="End"
+                        Url=""
+                        VerticalOptions="Center"
+                        WidthRequest="216" />
+
+                    <Label
+                        x:Name="PokemonBLabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="36"
+                        HorizontalTextAlignment="Center"
+                        TextColor="{StaticResource PrimaryColor}" />
+
+                    <Label
+                        x:Name="LinhaBLabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="26"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
+
+                    <Label
+                        x:Name="SentidoBLabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="26"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
+
+                    <Label
+                        x:Name="HpBLabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#000000" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Label
+                x:Name="ResultadoLabel"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <BoxView HeightRequest="2" Color="{StaticResource PrimaryColor}" />
         </VerticalStackLayout>
 
-        <!-- POKÉMON B -->
-        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
-          <controls:PokemonSpriteView
-            x:Name="PokemonBImage"
-            WidthRequest="216"
-            HeightRequest="216"
-            Url=""
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-          />
+        <!--  CONTEÚDO ROLÁVEL  -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout>
+                <Label
+                    FontFamily="PokemonEmerald"
+                    FontSize="36"
+                    HorizontalTextAlignment="Center"
+                    Text="NARRAÇÃO DA BATALHA"
+                    TextColor="{StaticResource PrimaryColor}" />
 
-          <Label
-            x:Name="PokemonBLabel"
-            FontFamily="PokemonEmerald"
-            FontSize="36"
-            HorizontalTextAlignment="Center"
-            TextColor="{StaticResource PrimaryColor}"
-          />
+                <ActivityIndicator
+                    x:Name="LoadingIndicator"
+                    IsRunning="True"
+                    IsVisible="True"
+                    Color="{StaticResource PrimaryColor}" />
 
-          <Label
-            x:Name="LinhaBLabel"
-            FontFamily="PokemonEmerald"
-            FontSize="26"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
+                <Label
+                    x:Name="StatusLabel"
+                    FontFamily="PokemonEmerald"
+                    FontSize="30"
+                    HorizontalTextAlignment="Center"
+                    Text="Aguardando narração..."
+                    TextColor="Gray" />
 
-          <Label
-            x:Name="SentidoBLabel"
-            FontFamily="PokemonEmerald"
-            FontSize="26"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
+                <Label
+                    x:Name="NarracaoLabel"
+                    Padding="75,10"
+                    FontFamily="PokemonEmerald"
+                    FontSize="30"
+                    LineBreakMode="WordWrap"
+                    TextColor="#000000" />
 
-          <Label
-            x:Name="HpBLabel"
-            FontFamily="PokemonEmerald"
-            FontSize="20"
-            TextColor="#000000"
-            HorizontalTextAlignment="Center"
-          />
-        </VerticalStackLayout>
-      </Grid>
+                <Button
+                    x:Name="TentarNovamenteButton"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    Clicked="OnTentarNovamenteClicked"
+                    FontFamily="PokemonEmerald"
+                    FontSize="34"
+                    IsVisible="False"
+                    Text="TENTAR NOVAMENTE"
+                    TextColor="White" />
 
-      <Label
-        x:Name="ResultadoLabel"
-        FontFamily="PokemonEmerald"
-        FontSize="30"
-        HorizontalTextAlignment="Center"
-        TextColor="{StaticResource PrimaryColor}"
-      />
-
-      <BoxView HeightRequest="2" Color="{StaticResource PrimaryColor}" />
-    </VerticalStackLayout>
-
-    <!-- CONTEÚDO ROLÁVEL -->
-    <ScrollView Grid.Row="1">
-      <VerticalStackLayout>
-        <Label
-          Text="NARRAÇÃO DA BATALHA"
-          FontFamily="PokemonEmerald"
-          FontSize="36"
-          HorizontalTextAlignment="Center"
-          TextColor="{StaticResource PrimaryColor}"
-        />
-
-        <ActivityIndicator
-          x:Name="LoadingIndicator"
-          IsRunning="True"
-          IsVisible="True"
-          Color="{StaticResource PrimaryColor}"
-        />
-
-        <Label
-          x:Name="StatusLabel"
-          Text="Aguardando narração..."
-          FontFamily="PokemonEmerald"
-          FontSize="30"
-          HorizontalTextAlignment="Center"
-          TextColor="Gray"
-        />
-
-        <Label
-          x:Name="NarracaoLabel"
-          FontFamily="PokemonEmerald"
-          FontSize="30"
-          LineBreakMode="WordWrap"
-          TextColor="#000000"
-          Padding="75,10"
-        />
-
-        <Button
-          x:Name="TentarNovamenteButton"
-          Text="TENTAR NOVAMENTE"
-          Clicked="OnTentarNovamenteClicked"
-          IsVisible="False"
-          BackgroundColor="{StaticResource PrimaryColor}"
-          TextColor="White"
-          FontSize="34"
-          FontFamily="PokemonEmerald"
-        />
-
-        <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-          <Button
-            x:Name="VoltarButton"
-            Text="VOLTAR"
-            Clicked="OnBackClicked"
-            BackgroundColor="{StaticResource PrimaryColor}"
-            TextColor="White"
-            FontSize="34"
-            FontFamily="PokemonEmerald"
-          />
-          <Button
-            x:Name="SortearNovamenteButton"
-            Text="SORTEAR NOVAMENTE"
-            Clicked="OnSortearNovamenteClicked"
-            IsVisible="False"
-            BackgroundColor="{StaticResource PrimaryColor}"
-            TextColor="White"
-            FontSize="34"
-            FontFamily="PokemonEmerald"
-          />
-        </HorizontalStackLayout>
-      </VerticalStackLayout>
-    </ScrollView>
-  </Grid>
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+                    <Button
+                        x:Name="VoltarButton"
+                        BackgroundColor="{StaticResource PrimaryColor}"
+                        Clicked="OnBackClicked"
+                        FontFamily="PokemonEmerald"
+                        FontSize="34"
+                        Text="VOLTAR"
+                        TextColor="White" />
+                    <Button
+                        x:Name="SortearNovamenteButton"
+                        BackgroundColor="{StaticResource PrimaryColor}"
+                        Clicked="OnSortearNovamenteClicked"
+                        FontFamily="PokemonEmerald"
+                        FontSize="34"
+                        IsVisible="False"
+                        Text="SORTEAR NOVAMENTE"
+                        TextColor="White" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

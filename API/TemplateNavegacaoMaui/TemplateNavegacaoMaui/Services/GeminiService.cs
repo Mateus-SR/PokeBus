@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -15,6 +16,11 @@ public sealed class GeminiService : IGeminiService
     private const string ApiUrl =
         "https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse";
 
+    private const string ApiUrlSemStreaming =
+        "https://generativelanguage.googleapis.com/v1beta/interactions";
+
+    private static readonly ConcurrentDictionary<string, string> CacheTraducoes = new();
+
     private const string Model = "gemini-3.1-flash-lite";
 
     private const string PausaTurno = "[[PAUSA_TURNO]]";
@@ -28,6 +34,136 @@ public sealed class GeminiService : IGeminiService
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
         _apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? string.Empty;
+    }
+
+    public async Task<string> TraduzirDescricaoPokedexAsync(
+        string descricao,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentException("A descrição está vazia.", nameof(descricao));
+
+        if (string.IsNullOrWhiteSpace(_apiKey))
+        {
+            throw new InvalidOperationException(
+                "A variável de ambiente GEMINI_API_KEY não foi configurada."
+            );
+        }
+
+        // Reaproveita traduções já realizadas.
+        if (CacheTraducoes.TryGetValue(descricao, out var traducaoEmCache))
+            return traducaoEmCache;
+
+        var requestBody = new
+        {
+            model = Model,
+            stream = false,
+            store = false,
+
+            system_instruction = """
+                Você é um tradutor especializado em descrições da Pokédex.
+
+                Traduza o texto recebido para português brasileiro natural.
+
+                Regras:
+                - Preserve integralmente o significado original.
+                - Não acrescente nem remova informações.
+                - Preserve os nomes oficiais dos Pokémon.
+                - Preserve números, medidas e nomes próprios.
+                - Não transforme a descrição em uma narrativa.
+                - Não resuma nem simplifique o conteúdo.
+                - Retorne somente o texto traduzido.
+                - Não utilize Markdown, títulos ou comentários.
+                """,
+
+            input = descricao,
+
+            generation_config = new { max_output_tokens = 500 },
+        };
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, ApiUrlSemStreaming);
+
+        request.Headers.Add("x-goog-api-key", _apiKey);
+        request.Content = JsonContent.Create(requestBody);
+
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var erro = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            throw new HttpRequestException(
+                $"Erro na tradução Gemini: {(int)response.StatusCode} "
+                    + $"{response.StatusCode}. Resposta: {erro}"
+            );
+        }
+
+        var conteudo = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        using var documento = JsonDocument.Parse(conteudo);
+
+        var raiz = documento.RootElement;
+
+        if (!raiz.TryGetProperty("status", out var status) || status.GetString() != "completed")
+        {
+            throw new InvalidOperationException("O Gemini não concluiu a tradução.");
+        }
+
+        if (
+            !raiz.TryGetProperty("steps", out var etapas)
+            || etapas.ValueKind != JsonValueKind.Array
+        )
+        {
+            throw new InvalidOperationException(
+                "A resposta do Gemini não contém etapas de tradução."
+            );
+        }
+
+        var resultado = new StringBuilder();
+
+        foreach (var etapa in etapas.EnumerateArray())
+        {
+            if (
+                !etapa.TryGetProperty("type", out var tipoEtapa)
+                || tipoEtapa.GetString() != "model_output"
+            )
+            {
+                continue;
+            }
+
+            if (
+                !etapa.TryGetProperty("content", out var conteudos)
+                || conteudos.ValueKind != JsonValueKind.Array
+            )
+            {
+                continue;
+            }
+
+            foreach (var item in conteudos.EnumerateArray())
+            {
+                if (
+                    item.TryGetProperty("type", out var tipoConteudo)
+                    && tipoConteudo.GetString() == "text"
+                    && item.TryGetProperty("text", out var texto)
+                )
+                {
+                    resultado.Append(texto.GetString());
+                }
+            }
+        }
+
+        var traducao = resultado.ToString().Trim();
+
+        if (string.IsNullOrWhiteSpace(traducao))
+        {
+            throw new InvalidOperationException("O Gemini retornou uma tradução vazia.");
+        }
+
+        // Guarda a tradução para reutilização durante a execução do aplicativo.
+        CacheTraducoes.TryAdd(descricao, traducao);
+
+        return CacheTraducoes[descricao];
     }
 
     public async Task NarrarBatalhaEmStreamingAsync(

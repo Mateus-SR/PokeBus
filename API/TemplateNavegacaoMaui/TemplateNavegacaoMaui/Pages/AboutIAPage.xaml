@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="TemplateNavegacaoMaui.Pages.AboutIAPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Uso de IA"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="16"
+            VerticalOptions="Start">
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="40"
+                HorizontalTextAlignment="Center"
+                Text="Uso de Inteligência Artificial"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="IA durante o desenvolvimento"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="Ferramentas de Inteligência Artificial Generativa foram utilizadas como apoio durante o desenvolvimento deste projeto. Elas auxiliaram na pesquisa e compreensão de tecnologias, no planejamento de funcionalidades, na elaboração e revisão de trechos de código, na identificação de erros e na documentação."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="O uso dessas ferramentas não substituiu o desenvolvimento e a avaliação do projeto. As sugestões geradas foram analisadas, adaptadas e testadas durante a implementação."
+                TextColor="Gray" />
+
+            <BoxView
+                Margin="0,8"
+                BackgroundColor="{StaticResource PrimaryColor}"
+                HeightRequest="2" />
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="IA durante a execução"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="O aplicativo também utiliza a Gemini API em duas funcionalidades:"
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="Tradução da Pokédex: a descrição original de cada Pokémon, obtida pela PokeAPI, é enviada à Gemini para gerar uma versão em português."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="Narração das batalhas: após a simulação, a Gemini transforma os acontecimentos em uma narração textual, descrevendo os golpes e o resultado do confronto."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="É importante destacar que a IA não escolhe o vencedor nem calcula os danos das batalhas. Essas decisões são realizadas pelo sistema de simulação do próprio aplicativo. A Gemini é responsável apenas pela narração."
+                TextColor="Gray" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
