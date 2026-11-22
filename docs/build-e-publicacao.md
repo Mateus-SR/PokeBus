@@ -12,7 +12,7 @@ iOS e Mac Catalyst não são gerados (exigem macOS e conta de desenvolvedor Appl
 ## Quando ele roda
 
 - **Pull request para a `main`** que altere `API/**` ou o próprio workflow: serve de verificação de que o projeto compila.
-- **Manualmente**: aba *Actions* → *Build (Windows e Android)* → *Run workflow*.
+- **Manualmente**: aba *Actions* → *Build (Windows e Android)* → *Run workflow*. Sem informar a versão, só gera os arquivos (como *Artifacts*); informando a versão, também publica uma *Release*.
 - **Ao criar uma tag `v*`**: além de compilar, publica uma *Release* com os dois arquivos.
 
 ## Onde baixar
@@ -22,12 +22,25 @@ iOS e Mac Catalyst não são gerados (exigem macOS e conta de desenvolvedor Appl
 
 ## Publicar uma versão
 
+O nome da versão deve seguir o formato `v1.0.0` (começa com `v`). Há três jeitos, todos resultam na mesma Release com `PokeBus-windows-x64.zip` e `PokeBus-android.apk`:
+
+**1. Pelo site, sem terminal (mais simples)**
+
+1. Aba *Actions* → *Build (Windows e Android)* → botão *Run workflow*.
+2. Escolha o branch `main`, preencha **Versão a publicar** (ex.: `v1.0.0`) e confirme.
+3. Quando os jobs terminarem, a Release aparece na aba *Releases*, com as notas geradas a partir dos commits e pull requests desde a versão anterior.
+
+**2. Por tag, no terminal**
+
 ```bash
+git checkout main && git pull
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-A Release é criada automaticamente, com as notas geradas a partir dos commits e pull requests desde a versão anterior.
+**3. Criando a Release pelo site**
+
+*Releases* → *Draft a new release* → em *Choose a tag*, digite `v1.0.0` e escolha *Create new tag* → *Publish release*. O workflow roda e anexa os arquivos à Release que você criou (leva alguns minutos; a Release fica sem arquivos até o fim do build).
 
 ## Assinatura do APK
 
