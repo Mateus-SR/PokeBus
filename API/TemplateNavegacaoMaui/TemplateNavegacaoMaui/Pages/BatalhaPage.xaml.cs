@@ -313,9 +313,8 @@ public partial class BatalhaPage : ContentPage
                     + "informe a sua chave em Configurações.\n\n"
                     + _batalha.Relatorio;
 
+                // Sem chave, tentar de novo não adianta: o botão certo é o de configurar.
                 ConfigurarChaveButton.IsVisible = true;
-                TentarNovamenteButton.IsVisible = true;
-                TentarNovamenteButton.IsEnabled = true;
             });
         }
         catch (Exception ex)
