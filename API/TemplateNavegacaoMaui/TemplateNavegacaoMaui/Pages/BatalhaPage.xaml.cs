@@ -145,6 +145,7 @@ public partial class BatalhaPage : ContentPage
     }
 
     private string _estiloAtual = "NORMAL";
+    private bool _perspectivaInvertida = false;
 
     private BatalhaPokemon? _batalha;
 
@@ -212,13 +213,59 @@ public partial class BatalhaPage : ContentPage
     public BatalhaPage(
         IGeminiService geminiService,
         IBatalhaService batalhaService,
-        OnibusStore onibusStore)
+        OnibusStore onibusStore
+    )
     {
         _geminiService = geminiService;
         _batalhaService = batalhaService;
         _onibusStore = onibusStore;
 
         InitializeComponent();
+    }
+
+    private void OnInverterPerspectivaClicked(object sender, EventArgs e)
+    {
+        if (_batalha == null)
+            return;
+
+        _perspectivaInvertida = !_perspectivaInvertida;
+
+        AtualizarCampoBatalha();
+    }
+
+    private void AtualizarCampoBatalha()
+    {
+        if (_batalha == null)
+            return;
+
+        // Determina os participantes de cada posição visual.
+        var proximo = _perspectivaInvertida ? _batalha.ParticipanteB : _batalha.ParticipanteA;
+
+        var distante = _perspectivaInvertida ? _batalha.ParticipanteA : _batalha.ParticipanteB;
+
+        // Posição próxima: sempre utiliza o sprite traseiro.
+        PokemonProximoImage.Url = proximo.Pokemon.BackSpriteUrl;
+
+        // Posição distante: sempre utiliza o sprite frontal.
+        PokemonDistanteImage.Url = distante.Pokemon.SpriteUrl;
+
+        // Informações do participante próximo.
+        PokemonProximoLabel.Text = proximo.Pokemon.Name;
+
+        LinhaProximoLabel.Text = $"Linha {proximo.Onibus.CodigoLetreiro}";
+
+        SentidoProximoLabel.Text = $"Sentido {proximo.Onibus.SentidoLinha}";
+
+        HpProximoLabel.Text = $"HP: {proximo.HpAtual}/{proximo.HpMaximo}";
+
+        // Informações do participante distante.
+        PokemonDistanteLabel.Text = distante.Pokemon.Name;
+
+        LinhaDistanteLabel.Text = $"Linha {distante.Onibus.CodigoLetreiro}";
+
+        SentidoDistanteLabel.Text = $"Sentido {distante.Onibus.SentidoLinha}";
+
+        HpDistanteLabel.Text = $"HP: {distante.HpAtual}/{distante.HpMaximo}";
     }
 
     private async void OnTentarNovamenteClicked(object sender, EventArgs e)
@@ -252,25 +299,7 @@ public partial class BatalhaPage : ContentPage
             _narracaoFormatada = new FormattedString();
             NarracaoLabel.FormattedText = _narracaoFormatada;
 
-            PokemonAImage.Url = _batalha.ParticipanteA.Pokemon.SpriteUrl;
-            PokemonBImage.Url = _batalha.ParticipanteB.Pokemon.SpriteUrl;
-
-            PokemonALabel.Text = _batalha.ParticipanteA.Pokemon.Name;
-            PokemonBLabel.Text = _batalha.ParticipanteB.Pokemon.Name;
-
-            LinhaALabel.Text = $"Linha {_batalha.ParticipanteA.Onibus.CodigoLetreiro}";
-
-            SentidoALabel.Text = $"Sentido {_batalha.ParticipanteA.Onibus.SentidoLinha}";
-
-            LinhaBLabel.Text = $"Linha {_batalha.ParticipanteB.Onibus.CodigoLetreiro}";
-
-            SentidoBLabel.Text = $"Sentido {_batalha.ParticipanteB.Onibus.SentidoLinha}";
-
-            HpALabel.Text =
-                $"HP: {_batalha.ParticipanteA.HpAtual}/{_batalha.ParticipanteA.HpMaximo}";
-
-            HpBLabel.Text =
-                $"HP: {_batalha.ParticipanteB.HpAtual}/{_batalha.ParticipanteB.HpMaximo}";
+            AtualizarCampoBatalha();
 
             ResultadoLabel.Text = _batalha.Empate
                 ? "EMPATE!"
