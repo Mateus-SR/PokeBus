@@ -4,6 +4,8 @@ Versão paródia do [Busca Bus](https://github.com/Mateus-SR/Busca-Bus-React) co
 
 Cada ônibus em circulação vira um Pokémon: os **três últimos dígitos do ID do veículo** definem o número na Pokédex (1 a 999). Na aba Arena, dois ônibus sorteados batalham e uma IA narra a luta.
 
+O `.exe` (Windows) e o `.apk` (Android) são gerados pelo GitHub Actions: veja [Build e publicação](docs/build-e-publicacao.md).
+
 ## O que o app usa
 
 | Recurso | Para quê |
