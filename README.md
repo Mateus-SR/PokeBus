@@ -12,16 +12,20 @@ Cada ônibus em circulação vira um Pokémon: os **três últimos dígitos do I
 | **PokeAPI** | Dados, sprites e golpes dos Pokémon |
 | **Gemini API** | Narração da batalha em streaming e tradução das descrições |
 
-Navegação: **Flyout** (Área principal / Sobre o projeto), **Tabs** (Monitoramento / Arena) e **pilha** (detalhes do Pokémon e tela da batalha).
+Navegação: **Flyout** (Área principal / Sobre o projeto / Configurações), **Tabs** (Monitoramento / Arena) e **pilha** (detalhes do Pokémon e tela da batalha).
 
 ## Como rodar
 
 Requisitos: .NET 10 com o workload MAUI (`dotnet workload install maui`) e Visual Studio 2022+ (ou outra IDE com suporte a MAUI).
 
 1. Abra `API/TemplateNavegacaoMaui/TemplateNavegacaoMaui` e execute o projeto no alvo desejado (Windows, Android...).
-2. Para a narração funcionar, defina a variável de ambiente `GEMINI_API_KEY` com uma chave da Gemini API antes de abrir a IDE.
+2. Para a narração das batalhas e a tradução da Pokédex, informe uma chave da Gemini API em **Configurações** (menu lateral). Você pode gerar uma gratuitamente no [Google AI Studio](https://aistudio.google.com/apikey).
 
-> **Limitação conhecida:** a chave é lida de uma variável de ambiente, então a narração só funciona onde essa variável existe (ex.: Windows em desenvolvimento), não em um celular. Por ser uma prova de conceito, a chave não passa por um backend.
+### Sobre a chave da Gemini
+
+- Cada pessoa usa a **própria chave**: ela é digitada no app e fica guardada somente no dispositivo (no armazenamento seguro do sistema, quando disponível) e é enviada apenas ao Google.
+- Sem chave, o app funciona normalmente; só a narração e a tradução ficam desativadas, e as telas avisam como configurar.
+- Isso vale para qualquer alvo (Windows, Android...), sem depender de variável de ambiente.
 
 ## Organização do código
 
@@ -32,4 +36,4 @@ Pages/      telas (XAML + code-behind)
 Controls/   PokemonSpriteView, controle SkiaSharp que desenha o sprite
 ```
 
-As dependências (`IRadarService`, `IPokemonService`, `IGeminiService`, `IBatalhaService` e o `OnibusStore`) são registradas no `MauiProgram` e recebidas pelas páginas no construtor.
+As dependências (`IRadarService`, `IPokemonService`, `IGeminiService`, `IBatalhaService`, `IConfiguracaoService` e o `OnibusStore`) são registradas no `MauiProgram` e recebidas pelas páginas no construtor.
