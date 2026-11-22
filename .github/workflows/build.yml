@@ -1,0 +1,161 @@
+name: Build (Windows e Android)
+
+# Gera o .exe (Windows) e o .apk (Android) do PokéBus.
+# - Em pull requests e manualmente: os arquivos ficam disponíveis como "artifacts" da execução.
+# - Ao criar uma tag "v*" (ex.: v1.0.0): também publica uma Release com os dois arquivos.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "API/**"
+      - ".github/workflows/build.yml"
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJETO: API/TemplateNavegacaoMaui/TemplateNavegacaoMaui/TemplateNavegacaoMaui.csproj
+  PASTA_PROJETO: API/TemplateNavegacaoMaui/TemplateNavegacaoMaui
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  windows:
+    name: Windows (.exe)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Instalar o workload do MAUI
+        run: dotnet workload install maui
+
+      - name: Publicar (sem instalador, com o runtime incluído)
+        shell: pwsh
+        run: >
+          dotnet publish "$env:PROJETO"
+          -f net10.0-windows10.0.19041.0
+          -c Release
+          -p:RuntimeIdentifierOverride=win-x64
+          -p:WindowsPackageType=None
+          -p:WindowsAppSDKSelfContained=true
+
+      # O .exe depende dos demais arquivos da pasta, então o pacote é a pasta inteira.
+      - name: Compactar a pasta publicada
+        shell: pwsh
+        run: >
+          Compress-Archive
+          -Path "$env:PASTA_PROJETO/bin/Release/net10.0-windows10.0.19041.0/win-x64/publish/*"
+          -DestinationPath PokeBus-windows-x64.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PokeBus-windows-x64
+          path: PokeBus-windows-x64.zip
+          if-no-files-found: error
+
+  android:
+    name: Android (.apk)
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      SECRET_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      SECRET_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: "17"
+
+      - name: Instalar o workload do MAUI para Android
+        run: dotnet workload install maui-android
+
+      # Com os secrets configurados, usa a chave permanente (permite atualizar o app já instalado).
+      # Sem eles, gera uma chave temporária: o APK instala normalmente, mas cada build tem uma
+      # assinatura diferente (para instalar por cima, é preciso desinstalar a versão anterior).
+      - name: Preparar a chave de assinatura
+        run: |
+          KEYSTORE="$RUNNER_TEMP/pokebus.keystore"
+          if [ -n "$SECRET_KEYSTORE_B64" ] && [ -n "$SECRET_KEYSTORE_PASS" ]; then
+            echo "$SECRET_KEYSTORE_B64" | base64 -d > "$KEYSTORE"
+            SENHA="$SECRET_KEYSTORE_PASS"
+            ALIAS="${SECRET_KEY_ALIAS:-pokebus}"
+            echo "Usando o keystore configurado nos secrets."
+          else
+            echo "::warning::Secrets do keystore não configurados, usando uma chave temporária (veja docs/build-e-publicacao.md)."
+            SENHA="pokebus-temporario"
+            ALIAS="pokebus"
+            keytool -genkeypair -keystore "$KEYSTORE" -alias "$ALIAS" \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass "$SENHA" -keypass "$SENHA" -dname "CN=PokeBus CI"
+          fi
+          echo "KEYSTORE_PATH=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "KEYSTORE_PASS=$SENHA" >> "$GITHUB_ENV"
+          echo "KEY_ALIAS=$ALIAS" >> "$GITHUB_ENV"
+
+      - name: Publicar o APK assinado
+        run: >
+          dotnet publish "$PROJETO"
+          -f net10.0-android
+          -c Release
+          -p:AndroidPackageFormats=apk
+          -p:AndroidKeyStore=true
+          -p:AndroidSigningKeyStore="$KEYSTORE_PATH"
+          -p:AndroidSigningKeyAlias="$KEY_ALIAS"
+          -p:AndroidSigningKeyPass=env:KEYSTORE_PASS
+          -p:AndroidSigningStorePass=env:KEYSTORE_PASS
+
+      - name: Localizar o APK
+        run: |
+          APK=$(find "$PASTA_PROJETO/bin/Release" -name "*-Signed.apk" | head -n 1)
+          if [ -z "$APK" ]; then
+            echo "::error::APK assinado não encontrado. Arquivos gerados:"
+            find "$PASTA_PROJETO/bin/Release" -name "*.apk" -o -name "*.aab"
+            exit 1
+          fi
+          cp "$APK" PokeBus-android.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PokeBus-android
+          path: PokeBus-android.apk
+          if-no-files-found: error
+
+  release:
+    name: Publicar Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artefatos
+          merge-multiple: true
+
+      - name: Criar a Release com os arquivos
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" artefatos/*
+          --repo "$GITHUB_REPOSITORY"
+          --title "PokéBus $GITHUB_REF_NAME"
+          --generate-notes
