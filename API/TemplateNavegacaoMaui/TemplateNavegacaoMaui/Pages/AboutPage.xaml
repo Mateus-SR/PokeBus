@@ -1,40 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  x:Class="TemplateNavegacaoMaui.Pages.AboutPage"
-  Title="Sobre"
-  BackgroundColor="{StaticResource PageBackground}"
->
-  <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
-    <Label
-      Text="Sobre o projeto"
-      FontSize="40"
-      FontAttributes="Bold"
-      TextColor="{StaticResource PrimaryColor}"
-      HorizontalTextAlignment="Center"
-      FontFamily="PokemonEmerald"
-    />
-    <Label
-      Text="Esse projeto é um aplicativo de exemplo desenvolvido em .NET MAUI, inspirado no universo Pokémon, no uso de IA Generativa e no projeto Busca Bus, PI do 4º Semestre de DSM. Ele demonstra a navegação entre páginas (pilha, menu lateral, aba), o uso de recursos visuais e a integração com APIs externas, comunicando entre si para a construção de uma nova aplicação."
-      HorizontalTextAlignment="Center"
-      FontFamily="PokemonEmerald"
-      TextColor="#000000"
-      FontSize="30"
-    />
-    <Label
-      Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
-      HorizontalTextAlignment="Center"
-      FontFamily="PokemonEmerald"
-      TextColor="#000000"
-      FontSize="30"
-    />
-        <Label
-      Text="Para associar um Pokémon a um ônibus, usamos os últimos 3 digitos do ID do veículo, que são convertidos em um número entre 1 e 999, (infelizmente sacrificando números maiores que 999). O Pokémon cujo ID na PokéDex corresponde a esse número é então associado ao ônibus."
-      HorizontalTextAlignment="Center"
-      FontFamily="PokemonEmerald"
-      TextColor="Gray"
-      FontSize="30"
-    />
-  </VerticalStackLayout>
+    x:Class="TemplateNavegacaoMaui.Pages.AboutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Como funciona"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="40"
+                HorizontalTextAlignment="Center"
+                Text="Sobre o projeto"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <!--  Texto original preservado  -->
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="Esse projeto é um aplicativo de exemplo desenvolvido em .NET MAUI, inspirado no universo Pokémon, no uso de IA Generativa e no projeto Busca Bus, PI do 4º Semestre de DSM. Ele demonstra a navegação entre páginas (pilha, menu lateral, aba), o uso de recursos visuais e a integração com APIs externas, comunicando entre si para a construção de uma nova aplicação."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="Para associar um Pokémon a um ônibus, usamos os últimos 3 dígitos do ID do veículo, que são convertidos em um número entre 1 e 999, (infelizmente sacrificando números maiores que 999). O Pokémon cujo ID na PokéDex corresponde a esse número é então associado ao ônibus."
+                TextColor="Gray" />
+
+            <BoxView
+                Margin="0,8"
+                BackgroundColor="#D8E5E2"
+                HeightRequest="1" />
+
+            <!--  Complementos  -->
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                Text="Como funcionam as batalhas"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="26"
+                Text="As batalhas são simuladas pelo próprio sistema do aplicativo. São considerados atributos como HP, ataque, defesa, velocidade e efetividade dos tipos. Os golpes utilizados também são obtidos da PokéAPI, incluindo suas características."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="26"
+                Text="O sistema calcula os danos, executa os turnos e determina o vencedor. O Gemini recebe o relatório da batalha e transforma os acontecimentos em uma narração dinâmica, sem interferir no resultado."
+                TextColor="#000000" />
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                Text="Tradução da Pokédex"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="26"
+                Text="As descrições dos Pokémon são obtidas originalmente em inglês pela PokéAPI. Quando os detalhes de um Pokémon são acessados, o Gemini traduz a descrição para português brasileiro. As traduções são mantidas em memória durante a execução do aplicativo para evitar chamadas repetidas."
+                TextColor="#000000" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

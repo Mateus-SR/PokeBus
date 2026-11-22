@@ -9,19 +9,16 @@ using TemplateNavegacaoMaui.Models;
 
 namespace TemplateNavegacaoMaui.Services;
 
-public sealed class PokemonService
+public sealed class PokemonService : IPokemonService
 {
     private const string BaseUrl = "https://pokeapi.co/api/v2/pokemon/";
+    private const string SpeciesBaseUrl = "https://pokeapi.co/api/v2/pokemon-species/";
 
     private readonly HttpClient _httpClient;
 
+    // Os caches só funcionam entre telas porque o serviço é registrado como singleton no MauiProgram.
     private readonly ConcurrentDictionary<int, PokemonInfo> _cache = new();
     private readonly ConcurrentDictionary<string, GolpePokemon> _cacheGolpes = new();
-
-    public PokemonService()
-    {
-        _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
-    }
 
     public PokemonService(HttpClient httpClient)
     {
@@ -51,7 +48,14 @@ public sealed class PokemonService
                 return null;
 
             var info = ConverterResposta(pokemon);
-            info.Golpes = await ObterGolpesAsync(pokemon.Moves);
+
+            var tarefaGolpes = ObterGolpesAsync(pokemon.Moves);
+            var tarefaDescricao = ObterDescricaoPokedexAsync(id);
+
+            await Task.WhenAll(tarefaGolpes, tarefaDescricao);
+
+            info.Golpes = await tarefaGolpes;
+            info.PokedexDescription = await tarefaDescricao;
 
             // Diagnóstico dos golpes carregados.
             System.Diagnostics.Debug.WriteLine(
@@ -84,51 +88,50 @@ public sealed class PokemonService
 
     private async Task<List<GolpePokemon>> ObterGolpesAsync(List<PokemonMoveSlot> movimentos)
     {
-        var golpesSelecionados = new List<GolpePokemon>();
+        using var limiteConsultas = new SemaphoreSlim(6);
 
-        var candidatos = movimentos
-            .Where(m => m.VersionGroupDetails.Any(v => v.MoveLearnMethod.Name == "level-up"))
-            .Select(m => m.Move)
-            .Where(m => !string.IsNullOrWhiteSpace(m.Url))
-            .GroupBy(m => m.Name)
-            .Select(g => g.First())
-            .OrderBy(_ => Random.Shared.Next())
-            .ToList();
-
-        // Limite de consultas por Pokémon.
-        foreach (var candidato in candidatos.Take(16))
+        var tarefas = movimentos.Select(async movimento =>
         {
-            if (golpesSelecionados.Count >= 4)
-                break;
+            var url = movimento.Move.Url;
+
+            if (string.IsNullOrWhiteSpace(url))
+                return null;
+
+            await limiteConsultas.WaitAsync();
 
             try
             {
-                var golpe = await ObterDetalhesGolpeAsync(candidato.Url);
-
-                if (golpe == null)
-                    continue;
-
-                // Ignora golpes sem potência e golpes de status.
-                if (golpe.Potencia <= 0 || golpe.Categoria == "status")
-                    continue;
-
-                golpesSelecionados.Add(golpe);
+                return await ObterDetalhesGolpeAsync(url);
             }
             catch (HttpRequestException ex)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    $"Erro ao consultar golpe {candidato.Name}: {ex.Message}"
+                    $"Erro ao consultar golpe {movimento.Move.Name}: {ex.Message}"
                 );
+                return null;
             }
             catch (JsonException ex)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    $"Erro ao interpretar golpe {candidato.Name}: {ex.Message}"
+                    $"Erro ao interpretar golpe {movimento.Move.Name}: {ex.Message}"
                 );
+                return null;
             }
-        }
+            finally
+            {
+                limiteConsultas.Release();
+            }
+        });
 
-        return golpesSelecionados;
+        var resultados = await Task.WhenAll(tarefas);
+
+        return resultados
+            .Where(golpe => golpe != null)
+            .Cast<GolpePokemon>()
+            .GroupBy(golpe => golpe.Id)
+            .Select(grupo => grupo.First())
+            .OrderBy(golpe => golpe.Nome)
+            .ToList();
     }
 
     private async Task<GolpePokemon?> ObterDetalhesGolpeAsync(string url)
@@ -142,7 +145,7 @@ public sealed class PokemonService
             return null;
 
         var descricao = resposta.EffectEntries.FirstOrDefault(e => e.Language.Name == "en")?.Effect
-            ?? "Golpe ofensivo.";
+            ?? "Descrição em português indisponível.";
 
         var golpe = new GolpePokemon
         {
@@ -157,6 +160,43 @@ public sealed class PokemonService
         };
 
         return _cacheGolpes.GetOrAdd(url, golpe);
+    }
+
+    private async Task<string> ObterDescricaoPokedexAsync(int id)
+    {
+        try
+        {
+            var url = $"{SpeciesBaseUrl}{id}/";
+
+            var resposta = await _httpClient.GetFromJsonAsync<PokemonSpeciesApiResponse>(url);
+
+            if (resposta == null)
+                return "Descrição da Pokédex indisponível.";
+
+            var descricao = resposta
+                .FlavorTextEntries.FirstOrDefault(e => e.Language.Name == "en")
+                ?.FlavorText;
+
+            if (string.IsNullOrWhiteSpace(descricao))
+                return "Descrição em português indisponível.";
+
+            // Remove quebras de linha e caracteres de controle da PokeAPI.
+            return descricao.Replace('\f', ' ').Replace('\n', ' ').Replace('\r', ' ').Trim();
+        }
+        catch (HttpRequestException ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"Erro ao consultar descrição da Pokédex: {ex.Message}"
+            );
+            return "Descrição da Pokédex indisponível.";
+        }
+        catch (JsonException ex)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"Erro ao interpretar descrição da Pokédex: {ex.Message}"
+            );
+            return "Descrição da Pokédex indisponível.";
+        }
     }
 
     private static PokemonInfo ConverterResposta(PokemonApiResponse response)
@@ -193,11 +233,14 @@ public sealed class PokemonService
             ?? response.Sprites.Other?.OfficialArtwork?.FrontDefault
             ?? string.Empty;
 
+        var backSprite = response.Sprites.BackDefault ?? string.Empty;
+
         return new PokemonInfo
         {
             Id = response.Id,
             Name = nome,
             SpriteUrl = sprite,
+            BackSpriteUrl = backSprite,
 
             HeightText = $"{(response.Height / 10m).ToString("0.0", cultura)} m",
             WeightText = $"{(response.Weight / 10m).ToString("0.0", cultura)} kg",
@@ -256,6 +299,9 @@ public sealed class PokemonService
         [JsonPropertyName("sprites")]
         public PokemonSprites Sprites { get; set; } = new();
 
+        [JsonPropertyName("back_default")]
+        public string? BackDefault { get; set; }
+
         [JsonPropertyName("moves")]
         public List<PokemonMoveSlot> Moves { get; set; } = [];
     }
@@ -297,6 +343,9 @@ public sealed class PokemonService
     {
         [JsonPropertyName("front_default")]
         public string? FrontDefault { get; set; }
+
+        [JsonPropertyName("back_default")]
+        public string? BackDefault { get; set; }
 
         [JsonPropertyName("other")]
         public PokemonOtherSprites? Other { get; set; }
@@ -364,6 +413,21 @@ public sealed class PokemonService
     {
         [JsonPropertyName("effect")]
         public string Effect { get; set; } = "";
+
+        [JsonPropertyName("language")]
+        public PokemonResource Language { get; set; } = new();
+    }
+
+    private sealed class PokemonSpeciesApiResponse
+    {
+        [JsonPropertyName("flavor_text_entries")]
+        public List<PokemonFlavorTextEntry> FlavorTextEntries { get; set; } = [];
+    }
+
+    private sealed class PokemonFlavorTextEntry
+    {
+        [JsonPropertyName("flavor_text")]
+        public string FlavorText { get; set; } = "";
 
         [JsonPropertyName("language")]
         public PokemonResource Language { get; set; } = new();

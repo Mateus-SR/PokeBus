@@ -3,9 +3,16 @@ using TemplateNavegacaoMaui.Models;
 
 namespace TemplateNavegacaoMaui.Services;
 
-public sealed class BatalhaService
+public sealed class BatalhaService : IBatalhaService
 {
     private const int MaximoTurnos = 10;
+
+    private readonly Random _random;
+
+    public BatalhaService(Random random)
+    {
+        _random = random ?? throw new ArgumentNullException(nameof(random));
+    }
 
     public BatalhaPokemon SimularBatalha(Onibus onibusA, Onibus onibusB)
     {
@@ -59,18 +66,15 @@ public sealed class BatalhaService
         var pokemon = onibus.Pokemon!;
 
         // O HP de combate é ampliado para permitir confrontos mais longos.
-        int hpMaximo = Math.Max(50, pokemon.Hp * 2 + 60);
+        int hpMaximo = Math.Max(
+            50,
+            pokemon.Hp - 10 + pokemon.Defense / 2 + pokemon.SpecialDefense / 2
+        );
 
-        return new ParticipanteBatalha
-        {
-            Onibus = onibus,
-            Pokemon = pokemon,
-            HpMaximo = hpMaximo,
-            HpAtual = hpMaximo,
-        };
+        return new ParticipanteBatalha(onibus, pokemon, hpMaximo);
     }
 
-    private static void ExecutarAtaque(
+    private void ExecutarAtaque(
         BatalhaPokemon batalha,
         ParticipanteBatalha atacante,
         ParticipanteBatalha defensor,
@@ -85,7 +89,7 @@ public sealed class BatalhaService
 
         if (pokemonAtacante.Golpes.Count > 0)
         {
-            golpe = pokemonAtacante.Golpes[Random.Shared.Next(pokemonAtacante.Golpes.Count)];
+            golpe = pokemonAtacante.Golpes[_random.Next(pokemonAtacante.Golpes.Count)];
         }
         else
         {
@@ -121,7 +125,7 @@ public sealed class BatalhaService
         int precisao = Math.Clamp(golpe.Precisao, 0, 100);
 
         // Verifica se o golpe acertou.
-        bool acertou = Random.Shared.Next(1, 101) <= precisao;
+        bool acertou = _random.Next(1, 101) <= precisao;
 
         int dano = 0;
 
@@ -132,13 +136,13 @@ public sealed class BatalhaService
             double stab = pokemonAtacante.Types.Contains(golpe.Tipo) ? 1.5 : 1.0;
 
             // Variação aleatória no dano.
-            double variacao = Random.Shared.Next(85, 101) / 100.0;
+            double variacao = _random.Next(85, 101) / 100.0;
 
             double danoBase = (golpe.Potencia * 0.65 + 8) * (poderAtaque / (double)(defesa + 100));
 
             dano = Math.Max(1, (int)Math.Round(danoBase * efetividade * stab * variacao));
 
-            defensor.HpAtual = Math.Max(0, defensor.HpAtual - dano);
+            defensor.ReceberDano(dano);
         }
         else if (!acertou)
         {

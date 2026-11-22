@@ -8,18 +8,23 @@ namespace TemplateNavegacaoMaui.Pages;
 
 public partial class MainPage : ContentPage
 {
-    private readonly RadarService _radarService =
-        new(new HttpClient());
-
-    private readonly PokemonService _pokemonService =
-        new(new HttpClient());
+    private readonly IRadarService _radarService;
+    private readonly IPokemonService _pokemonService;
+    private readonly OnibusStore _onibusStore;
 
     private bool _jaCarregou;
 
-    public ObservableCollection<Onibus> Onibus => OnibusStore.Onibus;
+    public ObservableCollection<Onibus> Onibus => _onibusStore.Onibus;
 
-    public MainPage()
+    public MainPage(
+        IRadarService radarService,
+        IPokemonService pokemonService,
+        OnibusStore onibusStore)
     {
+        _radarService = radarService;
+        _pokemonService = pokemonService;
+        _onibusStore = onibusStore;
+
         InitializeComponent();
         BindingContext = this;
     }

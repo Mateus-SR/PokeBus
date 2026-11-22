@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-  x:Class="TemplateNavegacaoMaui.AppShell"
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:pages="clr-namespace:TemplateNavegacaoMaui.Pages"
-  FlyoutBehavior="Flyout"
-  FlyoutBackgroundColor="{StaticResource PrimaryColor}"
->
-  <!-- Item do menu lateral que contém as abas inferiores -->
-  <FlyoutItem Title="Área principal" Route="principal">
-    <Tab Title="Monitoramento" Route="inicio">
-      <ShellContent Title="Monitoramento" ContentTemplate="{DataTemplate pages:MainPage}" />
-    </Tab>
+    x:Class="TemplateNavegacaoMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:TemplateNavegacaoMaui.Pages"
+    FlyoutBackgroundColor="{StaticResource PrimaryColor}"
+    FlyoutBehavior="Flyout">
+    <!--  Item do menu lateral que contém as abas inferiores  -->
+    <FlyoutItem Title="Área principal" Route="principal">
+        <Tab Title="Monitoramento" Route="inicio">
+            <ShellContent Title="Monitoramento" ContentTemplate="{DataTemplate pages:MainPage}" />
+        </Tab>
 
-    <Tab Title="Arena" Route="conteudo">
-      <ShellContent Title="Arena" ContentTemplate="{DataTemplate pages:ContentPageTemplate}" />
-    </Tab>
-  </FlyoutItem>
+        <Tab Title="Arena" Route="conteudo">
+            <ShellContent Title="Arena" ContentTemplate="{DataTemplate pages:ContentPageTemplate}" />
+        </Tab>
+    </FlyoutItem>
 
-  <!-- Item independente do menu lateral -->
-  <FlyoutItem Title="Sobre o projeto" Route="sobre">
-    <ShellContent Title="Sobre o projeto" ContentTemplate="{DataTemplate pages:AboutPage}" />
-  </FlyoutItem>
+    <!--  Item do menu lateral com abas próprias  -->
+    <FlyoutItem Title="Sobre o projeto" Route="sobre">
+
+        <Tab Title="Como funciona" Route="funcionamento">
+            <ShellContent Title="Como funciona" ContentTemplate="{DataTemplate pages:AboutPage}" />
+        </Tab>
+
+        <Tab Title="Uso de IA" Route="uso-ia">
+            <ShellContent Title="Uso de IA" ContentTemplate="{DataTemplate pages:AboutIAPage}" />
+        </Tab>
+
+    </FlyoutItem>
+
 </Shell>
