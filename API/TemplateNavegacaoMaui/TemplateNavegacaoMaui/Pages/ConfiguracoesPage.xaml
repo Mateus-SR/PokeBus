@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="TemplateNavegacaoMaui.Pages.ConfiguracoesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Configurações"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="16"
+            VerticalOptions="Start">
+
+            <Label
+                FontAttributes="Bold"
+                FontFamily="PokemonEmerald"
+                FontSize="40"
+                HorizontalTextAlignment="Center"
+                Text="Chave da Gemini API"
+                TextColor="{StaticResource PrimaryColor}" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalTextAlignment="Center"
+                Text="A narração das batalhas e a tradução da Pokédex usam a Gemini API. Cada pessoa usa a própria chave, gratuita no Google AI Studio."
+                TextColor="#000000" />
+
+            <Label
+                FontFamily="PokemonEmerald"
+                FontSize="26"
+                HorizontalTextAlignment="Center"
+                Text="A chave fica guardada somente neste dispositivo e é enviada apenas ao Google."
+                TextColor="Gray" />
+
+            <Button
+                x:Name="GerarChaveButton"
+                Clicked="OnGerarChaveClicked"
+                FontFamily="PokemonEmerald"
+                FontSize="30"
+                HorizontalOptions="Center"
+                Text="GERAR CHAVE GRATUITA" />
+
+            <BoxView
+                Margin="0,8"
+                BackgroundColor="{StaticResource PrimaryColor}"
+                HeightRequest="2" />
+
+            <Label
+                x:Name="StatusLabel"
+                FontFamily="PokemonEmerald"
+                FontSize="28"
+                HorizontalTextAlignment="Center"
+                Text="Verificando..."
+                TextColor="Gray" />
+
+            <Entry
+                x:Name="ChaveEntry"
+                IsPassword="True"
+                Placeholder="Cole aqui a sua chave"
+                TextColor="#000000"
+                PlaceholderColor="Gray" />
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+                <Button
+                    x:Name="SalvarButton"
+                    Clicked="OnSalvarClicked"
+                    FontFamily="PokemonEmerald"
+                    FontSize="30"
+                    Text="SALVAR" />
+                <Button
+                    x:Name="RemoverButton"
+                    Clicked="OnRemoverClicked"
+                    FontFamily="PokemonEmerald"
+                    FontSize="30"
+                    IsVisible="False"
+                    Text="REMOVER" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

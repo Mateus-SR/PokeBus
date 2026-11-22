@@ -82,6 +82,17 @@ public partial class PokemonDetailsPage : ContentPage, IQueryAttributable
                 TraducaoStatusLabel.IsVisible = false;
             });
         }
+        catch (ChaveGeminiAusenteException)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                PokedexDescriptionLabel.Text = descricaoOriginal;
+
+                TraducaoStatusLabel.Text =
+                    "Para traduzir a descrição, informe a sua chave da Gemini em Configurações.";
+                TraducaoStatusLabel.IsVisible = true;
+            });
+        }
         catch (Exception ex)
         {
             Debug.WriteLine($"[PokéBus] ERRO NA TRADUÇÃO: {ex}");

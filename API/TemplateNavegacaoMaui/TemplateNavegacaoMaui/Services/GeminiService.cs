@@ -27,13 +27,23 @@ public sealed class GeminiService : IGeminiService
     private const string PausaDramatica = "[[PAUSA_DRAMATICA]]";
 
     private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
+    private readonly IConfiguracaoService _configuracao;
 
-    public GeminiService(HttpClient httpClient)
+    public GeminiService(HttpClient httpClient, IConfiguracaoService configuracao)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _configuracao = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
+    }
 
-        _apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? string.Empty;
+    // A chave é lida a cada chamada: assim, salvar uma nova nas Configurações vale na hora.
+    private async Task<string> ObterChaveObrigatoriaAsync()
+    {
+        var chave = await _configuracao.ObterChaveGeminiAsync();
+
+        if (string.IsNullOrWhiteSpace(chave))
+            throw new ChaveGeminiAusenteException();
+
+        return chave;
     }
 
     public async Task<string> TraduzirDescricaoPokedexAsync(
@@ -44,16 +54,11 @@ public sealed class GeminiService : IGeminiService
         if (string.IsNullOrWhiteSpace(descricao))
             throw new ArgumentException("A descrição está vazia.", nameof(descricao));
 
-        if (string.IsNullOrWhiteSpace(_apiKey))
-        {
-            throw new InvalidOperationException(
-                "A variável de ambiente GEMINI_API_KEY não foi configurada."
-            );
-        }
-
-        // Reaproveita traduções já realizadas.
+        // Reaproveita traduções já realizadas (isso não exige chave).
         if (CacheTraducoes.TryGetValue(descricao, out var traducaoEmCache))
             return traducaoEmCache;
+
+        string apiKey = await ObterChaveObrigatoriaAsync();
 
         var requestBody = new
         {
@@ -84,7 +89,7 @@ public sealed class GeminiService : IGeminiService
 
         using var request = new HttpRequestMessage(HttpMethod.Post, ApiUrlSemStreaming);
 
-        request.Headers.Add("x-goog-api-key", _apiKey);
+        request.Headers.Add("x-goog-api-key", apiKey);
         request.Content = JsonContent.Create(requestBody);
 
         using var response = await _httpClient.SendAsync(request, cancellationToken);
@@ -172,13 +177,6 @@ public sealed class GeminiService : IGeminiService
         CancellationToken cancellationToken = default
     )
     {
-        if (string.IsNullOrWhiteSpace(_apiKey))
-        {
-            throw new InvalidOperationException(
-                "A variável de ambiente GEMINI_API_KEY não foi configurada."
-            );
-        }
-
         if (string.IsNullOrWhiteSpace(relatorio))
         {
             throw new ArgumentException("O relatório da batalha está vazio.", nameof(relatorio));
@@ -188,6 +186,8 @@ public sealed class GeminiService : IGeminiService
         {
             throw new ArgumentNullException(nameof(aoReceberTexto));
         }
+
+        string apiKey = await ObterChaveObrigatoriaAsync();
 
         var requestBody = new
         {
@@ -294,7 +294,7 @@ public sealed class GeminiService : IGeminiService
 
         using var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl);
 
-        request.Headers.Add("x-goog-api-key", _apiKey);
+        request.Headers.Add("x-goog-api-key", apiKey);
         request.Content = JsonContent.Create(requestBody);
 
         using var response = await _httpClient.SendAsync(

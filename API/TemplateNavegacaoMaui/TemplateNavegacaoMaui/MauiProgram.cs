@@ -46,9 +46,12 @@ public static class MauiProgram
             new HttpClient { Timeout = TimeSpan.FromSeconds(30) }
         ));
 
+        services.AddSingleton<IConfiguracaoService, ConfiguracaoService>();
+
         // A narração em streaming pode demorar, por isso o timeout é maior.
-        services.AddSingleton<IGeminiService>(_ => new GeminiService(
-            new HttpClient { Timeout = TimeSpan.FromSeconds(90) }
+        services.AddSingleton<IGeminiService>(sp => new GeminiService(
+            new HttpClient { Timeout = TimeSpan.FromSeconds(90) },
+            sp.GetRequiredService<IConfiguracaoService>()
         ));
 
         services.AddSingleton<IBatalhaService>(_ => new BatalhaService(Random.Shared));
@@ -63,5 +66,6 @@ public static class MauiProgram
         services.AddTransient<PokemonDetailsPage>();
         services.AddTransient<BatalhaPage>();
         services.AddTransient<AboutIAPage>();
+        services.AddTransient<ConfiguracoesPage>();
     }
 }

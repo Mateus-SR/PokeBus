@@ -152,6 +152,16 @@
                     Text="TENTAR NOVAMENTE"
                     TextColor="White" />
 
+                <Button
+                    x:Name="ConfigurarChaveButton"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    Clicked="OnConfigurarChaveClicked"
+                    FontFamily="PokemonEmerald"
+                    FontSize="34"
+                    IsVisible="False"
+                    Text="CONFIGURAR CHAVE"
+                    TextColor="White" />
+
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
                     <Button
                         x:Name="VoltarButton"

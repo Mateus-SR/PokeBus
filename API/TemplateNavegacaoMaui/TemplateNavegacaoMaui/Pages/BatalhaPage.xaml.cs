@@ -226,6 +226,12 @@ public partial class BatalhaPage : ContentPage
         await ExibirBatalhaAsync();
     }
 
+    private async void OnConfigurarChaveClicked(object sender, EventArgs e)
+    {
+        // Rota absoluta: sai desta página e abre as Configurações no menu lateral.
+        await Shell.Current.GoToAsync("//configuracao");
+    }
+
     private async Task ExibirBatalhaAsync()
     {
         if (_batalha == null)
@@ -233,6 +239,7 @@ public partial class BatalhaPage : ContentPage
 
         TentarNovamenteButton.IsEnabled = false;
         TentarNovamenteButton.IsVisible = false;
+        ConfigurarChaveButton.IsVisible = false;
         SortearNovamenteButton.IsVisible = false;
         SortearNovamenteButton.IsEnabled = false;
 
@@ -292,6 +299,23 @@ public partial class BatalhaPage : ContentPage
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 StatusLabel.Text = "Batalha concluída!";
+            });
+        }
+        catch (ChaveGeminiAusenteException)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                NarracaoLabel.FormattedText = null;
+                StatusLabel.Text = "Narração indisponível: falta a chave da Gemini API.";
+
+                NarracaoLabel.Text =
+                    "O resultado foi calculado normalmente. Para ouvir a narração, "
+                    + "informe a sua chave em Configurações.\n\n"
+                    + _batalha.Relatorio;
+
+                ConfigurarChaveButton.IsVisible = true;
+                TentarNovamenteButton.IsVisible = true;
+                TentarNovamenteButton.IsEnabled = true;
             });
         }
         catch (Exception ex)

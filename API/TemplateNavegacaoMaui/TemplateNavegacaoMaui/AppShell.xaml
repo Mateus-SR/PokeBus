@@ -30,4 +30,9 @@
 
     </FlyoutItem>
 
+    <!--  Item independente do menu lateral: chave da Gemini API  -->
+    <FlyoutItem Title="Configurações" Route="configuracao">
+        <ShellContent Title="Configurações" ContentTemplate="{DataTemplate pages:ConfiguracoesPage}" />
+    </FlyoutItem>
+
 </Shell>
