@@ -5,7 +5,7 @@ O workflow [`build.yml`](../.github/workflows/build.yml) gera os instaláveis do
 | Arquivo | Plataforma | Observação |
 | --- | --- | --- |
 | `PokeBus-windows-x64.zip` | Windows 10/11 (64 bits) | Descompacte **a pasta inteira** e abra o `.exe`. O runtime já vem incluído. |
-| `PokeBus-android.apk` | Android 5.0+ | Exige permitir a instalação de apps de fontes desconhecidas. |
+| `PokeBus-android.apk` | Android 5.0+ (ARM 32 e 64 bits, e x64) | Exige permitir a instalação de apps de fontes desconhecidas. Inclui a arquitetura `armeabi-v7a` para celulares de 32 bits, o que deixa o arquivo maior. O workflow falha se ela estiver ausente. |
 
 iOS e Mac Catalyst não são gerados (exigem macOS e conta de desenvolvedor Apple).
 
