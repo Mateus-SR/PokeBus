@@ -279,6 +279,20 @@ public partial class BatalhaPage : ContentPage
         await Shell.Current.GoToAsync("//configuracao");
     }
 
+    private Task ReiniciarNarracaoAsync()
+    {
+        return MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            _bufferFormatacao.Clear();
+            _estiloAtual = "NORMAL";
+
+            _narracaoFormatada = new FormattedString();
+            NarracaoLabel.FormattedText = _narracaoFormatada;
+
+            StatusLabel.Text = "A narração foi interrompida. Tentando novamente...";
+        });
+    }
+
     private async Task ExibirBatalhaAsync()
     {
         if (_batalha == null)
@@ -313,13 +327,17 @@ public partial class BatalhaPage : ContentPage
         {
             StatusLabel.Text = "A batalha começou!";
 
-            await _geminiService.NarrarBatalhaEmStreamingAsync(_batalha.Relatorio, async trecho =>
-            {
-                await MainThread.InvokeOnMainThreadAsync(() =>
+            await _geminiService.NarrarBatalhaEmStreamingAsync(
+                _batalha.Relatorio,
+                async trecho =>
                 {
-                    ProcessarTextoFormatado(trecho);
-                });
-            });
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        ProcessarTextoFormatado(trecho);
+                    });
+                },
+                aoReiniciar: ReiniciarNarracaoAsync
+            );
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
