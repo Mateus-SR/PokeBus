@@ -27,7 +27,6 @@ public sealed class GeminiService : IGeminiService
 
     private const int MaxTentativasPorModelo = 3;
     private static readonly TimeSpan TimeoutOperacao = TimeSpan.FromMinutes(6);
-    private static readonly TimeSpan EsperaMaximaRetry = TimeSpan.FromSeconds(30);
 
     private static readonly ConcurrentDictionary<string, string> CacheTraducoes = new();
 
@@ -663,13 +662,16 @@ public sealed class GeminiService : IGeminiService
 
     private static bool EhModeloIndisponivel(HttpRequestException erro)
     {
+        string mensagem = erro.Message;
+
         if (erro.StatusCode == HttpStatusCode.NotFound)
-            return true;
+        {
+            // Evita mascarar um 404 de rota/recurso que não esteja relacionado ao modelo.
+            return mensagem.Contains("model", StringComparison.OrdinalIgnoreCase);
+        }
 
         if (erro.StatusCode != HttpStatusCode.BadRequest)
             return false;
-
-        string mensagem = erro.Message;
 
         return mensagem.Contains("model", StringComparison.OrdinalIgnoreCase)
             && (
@@ -701,8 +703,6 @@ public sealed class GeminiService : IGeminiService
         // Full Jitter: janela de 0–1s na primeira repetição e 0–2s na segunda.
         double limiteMs = Math.Min(1000 * Math.Pow(2, tentativa - 1), 2000);
         double esperaMs = Random.Shared.NextDouble() * limiteMs;
-
-        esperaMs = Math.Min(esperaMs, EsperaMaximaRetry.TotalMilliseconds);
 
         // Retry-After é um limite mínimo informado pelo servidor; não o encurtamos
         // para caber na janela de jitter. O timeout global limita a espera total.
@@ -763,7 +763,7 @@ public sealed class GeminiService : IGeminiService
                 {
                     ultimoErro = ex;
                     Debug.WriteLine(
-                        $"[PokéBus][Gemini] Modelo {modelo} indisponível (404). Avançando para o próximo modelo."
+                        $"[PokéBus][Gemini] Modelo {modelo} indisponível. Avançando para o próximo modelo."
                     );
                     break;
                 }
