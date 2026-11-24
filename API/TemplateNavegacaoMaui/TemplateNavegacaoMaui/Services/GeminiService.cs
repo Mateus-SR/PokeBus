@@ -26,7 +26,7 @@ public sealed class GeminiService : IGeminiService
     ];
 
     private const int MaxTentativasPorModelo = 3;
-    private static readonly TimeSpan TimeoutOperacao = TimeSpan.FromMinutes(15);
+    private static readonly TimeSpan TimeoutOperacao = TimeSpan.FromMinutes(6);
     private static readonly TimeSpan EsperaMaximaRetry = TimeSpan.FromSeconds(30);
 
     private static readonly ConcurrentDictionary<string, string> CacheTraducoes = new();
@@ -233,7 +233,7 @@ public sealed class GeminiService : IGeminiService
             maxOutputTokens: 500
         );
 
-        using var request = CriarRequest(requestBody, apiKey);
+        using var request = CriarRequest(requestBody, apiKey, stream: false);
 
         using var response = await _httpClient.SendAsync(request, cancellationToken);
 
@@ -315,7 +315,7 @@ public sealed class GeminiService : IGeminiService
             maxOutputTokens: 1800
         );
 
-        using var request = CriarRequest(requestBody, apiKey);
+        using var request = CriarRequest(requestBody, apiKey, stream: true);
 
         using var response = await _httpClient.SendAsync(
             request,
@@ -595,10 +595,13 @@ public sealed class GeminiService : IGeminiService
 
     private static HttpRequestMessage CriarRequest(
         Dictionary<string, object?> requestBody,
-        string apiKey
+        string apiKey,
+        bool stream
     )
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl);
+        // Mantém o parâmetro SSE utilizado pelo fluxo de streaming já existente.
+        string url = stream ? $"{ApiUrl}?alt=sse" : ApiUrl;
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
         request.Headers.Add("x-goog-api-key", apiKey);
         request.Content = JsonContent.Create(requestBody);
         return request;
@@ -635,24 +638,47 @@ public sealed class GeminiService : IGeminiService
 
     private static HttpStatusCode? MapearCodigoErro(string? codigo)
     {
-        return (codigo ?? string.Empty).Trim().ToLowerInvariant() switch
+        string valor = (codigo ?? string.Empty).Trim().ToLowerInvariant();
+
+        if (int.TryParse(valor, out int codigoNumerico) && codigoNumerico >= 400 && codigoNumerico <= 599)
+            return (HttpStatusCode)codigoNumerico;
+
+        return valor switch
         {
             "resource_exhausted" or "too_many_requests" => HttpStatusCode.TooManyRequests,
             "unavailable" => HttpStatusCode.ServiceUnavailable,
             "gateway_timeout" => HttpStatusCode.GatewayTimeout,
-            "deadline_exceeded" => HttpStatusCode.RequestTimeout,
-            "internal" or "internal_error" => HttpStatusCode.InternalServerError,
+            "deadline_exceeded" => HttpStatusCode.GatewayTimeout,
+            "internal" or "internal_error" or "unknown" or "data_loss" => HttpStatusCode.InternalServerError,
             "not_found" => HttpStatusCode.NotFound,
             "unauthenticated" => HttpStatusCode.Unauthorized,
             "permission_denied" => HttpStatusCode.Forbidden,
-            "invalid_argument" or "invalid_request" or "bad_request" => HttpStatusCode.BadRequest,
+            "invalid_argument" or "invalid_request" or "bad_request"
+                or "failed_precondition" or "out_of_range" => HttpStatusCode.BadRequest,
+            "already_exists" or "aborted" => HttpStatusCode.Conflict,
+            "unimplemented" => HttpStatusCode.NotImplemented,
             _ => null,
         };
     }
 
     private static bool EhModeloIndisponivel(HttpRequestException erro)
     {
-        return erro.StatusCode == HttpStatusCode.NotFound;
+        if (erro.StatusCode == HttpStatusCode.NotFound)
+            return true;
+
+        if (erro.StatusCode != HttpStatusCode.BadRequest)
+            return false;
+
+        string mensagem = erro.Message;
+
+        return mensagem.Contains("model", StringComparison.OrdinalIgnoreCase)
+            && (
+                mensagem.Contains("not found", StringComparison.OrdinalIgnoreCase)
+                || mensagem.Contains("not supported", StringComparison.OrdinalIgnoreCase)
+                || mensagem.Contains("unsupported", StringComparison.OrdinalIgnoreCase)
+                || mensagem.Contains("does not support", StringComparison.OrdinalIgnoreCase)
+                || mensagem.Contains("not available", StringComparison.OrdinalIgnoreCase)
+            );
     }
 
     private static bool EhErroTransitorio(Exception erro)
@@ -667,7 +693,7 @@ public sealed class GeminiService : IGeminiService
             return status == 408 || status == 429 || status >= 500;
         }
 
-        return erro is IOException or TimeoutException or TaskCanceledException;
+        return erro is IOException or TimeoutException or TaskCanceledException or JsonException;
     }
 
     private static TimeSpan CalcularEspera(int tentativa, Exception erro)
@@ -676,12 +702,14 @@ public sealed class GeminiService : IGeminiService
         double limiteMs = Math.Min(1000 * Math.Pow(2, tentativa - 1), 2000);
         double esperaMs = Random.Shared.NextDouble() * limiteMs;
 
+        esperaMs = Math.Min(esperaMs, EsperaMaximaRetry.TotalMilliseconds);
+
+        // Retry-After é um limite mínimo informado pelo servidor; não o encurtamos
+        // para caber na janela de jitter. O timeout global limita a espera total.
         if (erro is GeminiApiException apiErro && apiErro.RetryAfter is TimeSpan retryAfter)
             esperaMs = Math.Max(esperaMs, retryAfter.TotalMilliseconds);
 
-        return TimeSpan.FromMilliseconds(
-            Math.Min(esperaMs, EsperaMaximaRetry.TotalMilliseconds)
-        );
+        return TimeSpan.FromMilliseconds(esperaMs);
     }
 
     private async Task<T> ExecutarComFallbackAsync<T>(
@@ -715,7 +743,10 @@ public sealed class GeminiService : IGeminiService
                         $"[PokéBus][Gemini] Modelo {modelo}: tentativa {tentativa}/{MaxTentativasPorModelo}."
                     );
 
-                    return await operacao(modelo, timeoutCts.Token);
+                    T resultado = await operacao(modelo, timeoutCts.Token);
+
+                    Debug.WriteLine($"[PokéBus][Gemini] Modelo {modelo} concluiu a operação.");
+                    return resultado;
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
