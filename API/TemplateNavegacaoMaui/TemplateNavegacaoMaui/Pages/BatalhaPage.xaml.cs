@@ -289,7 +289,7 @@ public partial class BatalhaPage : ContentPage
             _narracaoFormatada = new FormattedString();
             NarracaoLabel.FormattedText = _narracaoFormatada;
 
-            StatusLabel.Text = "A narração foi interrompida. Tentando novamente...";
+            StatusLabel.Text = "Tentando novamente com o Gemini...";
         });
     }
 
