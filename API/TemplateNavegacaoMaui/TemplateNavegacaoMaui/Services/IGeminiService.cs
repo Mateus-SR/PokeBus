@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ public interface IGeminiService
     Task NarrarBatalhaEmStreamingAsync(
         string relatorio,
         Func<string, Task> aoReceberTexto,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken = default,
+        Func<Task>? aoReiniciar = null
     );
 
     Task<string> TraduzirDescricaoPokedexAsync(
