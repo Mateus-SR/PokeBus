@@ -241,6 +241,13 @@
                         Text="Aguardando narração..."
                         TextColor="Gray" />
 
+                    <Label
+                        x:Name="ModeloLabel"
+                        FontFamily="PokemonEmerald"
+                        FontSize="16"
+                        HorizontalTextAlignment="Center"
+                        TextColor="Gray" />
+
                 </VerticalStackLayout>
 
                 <!--  NARRAÇÃO  -->
