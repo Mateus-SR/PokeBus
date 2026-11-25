@@ -13,7 +13,8 @@ public interface IGeminiService
         string relatorio,
         Func<string, Task> aoReceberTexto,
         CancellationToken cancellationToken = default,
-        Func<Task>? aoReiniciar = null
+        Func<Task>? aoReiniciar = null,
+        Func<string, Task>? aoSelecionarModelo = null
     );
 
     Task<string> TraduzirDescricaoPokedexAsync(
