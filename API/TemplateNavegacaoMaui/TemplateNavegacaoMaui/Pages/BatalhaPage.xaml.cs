@@ -293,6 +293,14 @@ public partial class BatalhaPage : ContentPage
         });
     }
 
+    private Task AtualizarModeloAsync(string modelo)
+    {
+        return MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            ModeloLabel.Text = $"Modelo: {modelo}";
+        });
+    }
+
     private async Task ExibirBatalhaAsync()
     {
         if (_batalha == null)
@@ -307,6 +315,7 @@ public partial class BatalhaPage : ContentPage
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             StatusLabel.Text = "O narrador está preparando a batalha...";
+            ModeloLabel.Text = string.Empty;
             _bufferFormatacao.Clear();
             _estiloAtual = "NORMAL";
 
@@ -336,7 +345,8 @@ public partial class BatalhaPage : ContentPage
                         ProcessarTextoFormatado(trecho);
                     });
                 },
-                aoReiniciar: ReiniciarNarracaoAsync
+                aoReiniciar: ReiniciarNarracaoAsync,
+                aoSelecionarModelo: AtualizarModeloAsync
             );
 
             await MainThread.InvokeOnMainThreadAsync(() =>
