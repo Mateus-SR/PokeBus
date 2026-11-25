@@ -188,7 +188,8 @@ public sealed class GeminiService : IGeminiService
         string relatorio,
         Func<string, Task> aoReceberTexto,
         CancellationToken cancellationToken = default,
-        Func<Task>? aoReiniciar = null
+        Func<Task>? aoReiniciar = null,
+        Func<string, Task>? aoSelecionarModelo = null
     )
     {
         if (string.IsNullOrWhiteSpace(relatorio))
@@ -213,7 +214,8 @@ public sealed class GeminiService : IGeminiService
                 return true;
             },
             cancellationToken,
-            aoReiniciar
+            aoReiniciar,
+            aoSelecionarModelo
         );
     }
 
@@ -715,7 +717,8 @@ public sealed class GeminiService : IGeminiService
     private async Task<T> ExecutarComFallbackAsync<T>(
         Func<string, CancellationToken, Task<T>> operacao,
         CancellationToken cancellationToken,
-        Func<Task>? aoReiniciar = null
+        Func<Task>? aoReiniciar = null,
+        Func<string, Task>? aoSelecionarModelo = null
     )
     {
         using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -726,6 +729,9 @@ public sealed class GeminiService : IGeminiService
 
         foreach (string modelo in Modelos)
         {
+            if (aoSelecionarModelo != null)
+                await aoSelecionarModelo(modelo);
+
             for (int tentativa = 1; tentativa <= MaxTentativasPorModelo; tentativa++)
             {
                 try
