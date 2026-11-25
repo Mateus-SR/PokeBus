@@ -279,6 +279,28 @@ public partial class BatalhaPage : ContentPage
         await Shell.Current.GoToAsync("//configuracao");
     }
 
+    private Task ReiniciarNarracaoAsync()
+    {
+        return MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            _bufferFormatacao.Clear();
+            _estiloAtual = "NORMAL";
+
+            _narracaoFormatada = new FormattedString();
+            NarracaoLabel.FormattedText = _narracaoFormatada;
+
+            StatusLabel.Text = "Tentando novamente com o Gemini...";
+        });
+    }
+
+    private Task AtualizarModeloAsync(string modelo)
+    {
+        return MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            ModeloLabel.Text = $"Modelo: {modelo}";
+        });
+    }
+
     private async Task ExibirBatalhaAsync()
     {
         if (_batalha == null)
@@ -293,6 +315,7 @@ public partial class BatalhaPage : ContentPage
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             StatusLabel.Text = "O narrador está preparando a batalha...";
+            ModeloLabel.Text = string.Empty;
             _bufferFormatacao.Clear();
             _estiloAtual = "NORMAL";
 
@@ -313,13 +336,18 @@ public partial class BatalhaPage : ContentPage
         {
             StatusLabel.Text = "A batalha começou!";
 
-            await _geminiService.NarrarBatalhaEmStreamingAsync(_batalha.Relatorio, async trecho =>
-            {
-                await MainThread.InvokeOnMainThreadAsync(() =>
+            await _geminiService.NarrarBatalhaEmStreamingAsync(
+                _batalha.Relatorio,
+                async trecho =>
                 {
-                    ProcessarTextoFormatado(trecho);
-                });
-            });
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        ProcessarTextoFormatado(trecho);
+                    });
+                },
+                aoReiniciar: ReiniciarNarracaoAsync,
+                aoSelecionarModelo: AtualizarModeloAsync
+            );
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
