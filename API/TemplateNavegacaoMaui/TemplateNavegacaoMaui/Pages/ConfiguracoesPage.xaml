@@ -109,21 +109,23 @@
                 TextColor="#000000"
                 PlaceholderColor="Gray" />
 
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+            <Grid x:Name="ActionsLayout" ColumnDefinitions="Auto,Auto" RowDefinitions="Auto">
                 <Button
                     x:Name="SalvarButton"
+                    Grid.Column="0"
                     Clicked="OnSalvarClicked"
                     FontFamily="PokemonEmerald"
                     FontSize="30"
                     Text="SALVAR" />
                 <Button
                     x:Name="RemoverButton"
+                    Grid.Column="1"
                     Clicked="OnRemoverClicked"
                     FontFamily="PokemonEmerald"
                     FontSize="30"
                     IsVisible="False"
                     Text="REMOVER" />
-            </HorizontalStackLayout>
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
