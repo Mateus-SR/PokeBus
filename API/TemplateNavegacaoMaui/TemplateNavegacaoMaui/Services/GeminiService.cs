@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -446,7 +447,14 @@ public sealed class GeminiService : IGeminiService
             HttpStatusCode? status = MapearCodigoErro(codigo);
 
             if (status.HasValue)
-                throw new GeminiApiException($"Erro na Gemini API: {mensagem}", status.Value);
+            {
+                throw new GeminiApiException(
+                    $"Erro na Gemini API: {mensagem}",
+                    status.Value,
+                    ObterRetryAfterDetalhes(erro),
+                    erro.GetRawText()
+                );
+            }
 
             throw new HttpRequestException($"Erro na Gemini API: {mensagem} (código: {codigo ?? "desconhecido"}).");
         }
@@ -618,7 +626,12 @@ public sealed class GeminiService : IGeminiService
         string mensagem =
             $"{contexto}: {(int)response.StatusCode} {response.StatusCode}. Resposta: {erro}";
 
-        return new GeminiApiException(mensagem, response.StatusCode, ObterRetryAfter(response));
+        return new GeminiApiException(
+            mensagem,
+            response.StatusCode,
+            ObterRetryAfter(response) ?? ObterRetryAfterPayload(erro),
+            erro
+        );
     }
 
     private static TimeSpan? ObterRetryAfter(HttpResponseMessage response)
@@ -635,6 +648,183 @@ public sealed class GeminiService : IGeminiService
         }
 
         return null;
+    }
+
+    private static TimeSpan? ObterRetryAfterPayload(string payload)
+    {
+        try
+        {
+            using var documento = JsonDocument.Parse(payload);
+            return ObterRetryAfterDetalhes(documento.RootElement);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static TimeSpan? ObterRetryAfterDetalhes(JsonElement raiz)
+    {
+        JsonElement objetoErro = raiz;
+
+        if (
+            raiz.ValueKind == JsonValueKind.Object
+            && raiz.TryGetProperty("error", out var erro)
+            && erro.ValueKind == JsonValueKind.Object
+        )
+        {
+            objetoErro = erro;
+        }
+
+        if (
+            !objetoErro.TryGetProperty("details", out var detalhes)
+            || detalhes.ValueKind != JsonValueKind.Array
+        )
+        {
+            return null;
+        }
+
+        foreach (var detalhe in detalhes.EnumerateArray())
+        {
+            string? tipo = ObterStringOpcional(detalhe, "@type");
+            string? intervaloTexto = ObterStringOpcional(detalhe, "retryDelay");
+
+            if (
+                tipo == null
+                || !tipo.EndsWith("google.rpc.RetryInfo", StringComparison.Ordinal)
+                || string.IsNullOrWhiteSpace(intervaloTexto)
+                || !intervaloTexto.EndsWith("s", StringComparison.Ordinal)
+                || !double.TryParse(
+                    intervaloTexto[..^1],
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double segundos
+                )
+                || segundos < 0
+                || segundos >= TimeSpan.MaxValue.TotalSeconds
+            )
+            {
+                continue;
+            }
+
+            return TimeSpan.FromSeconds(segundos);
+        }
+
+        return null;
+    }
+
+    private static string? ObterStringOpcional(JsonElement objeto, string propriedade)
+    {
+        return objeto.ValueKind == JsonValueKind.Object
+            && objeto.TryGetProperty(propriedade, out var valor)
+            && valor.ValueKind == JsonValueKind.String
+                ? valor.GetString()
+                : null;
+    }
+
+    private static JsonElement ObterObjetoErro(JsonElement raiz)
+    {
+        if (
+            raiz.ValueKind == JsonValueKind.Object
+            && raiz.TryGetProperty("error", out var erro)
+            && erro.ValueKind == JsonValueKind.Object
+        )
+        {
+            return erro;
+        }
+
+        return raiz;
+    }
+
+    private static bool EhIdentificadorCotaDiaria(string? identificador)
+    {
+        if (string.IsNullOrWhiteSpace(identificador))
+            return false;
+
+        string normalizado = identificador
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .Replace("/", string.Empty, StringComparison.Ordinal)
+            .Replace(".", string.Empty, StringComparison.Ordinal)
+            .ToLowerInvariant();
+
+        return normalizado.Contains("requestsperday", StringComparison.Ordinal)
+            || normalizado.Contains("requestperday", StringComparison.Ordinal);
+    }
+
+    private static bool EhMensagemDeCotaDiaria(string mensagem)
+    {
+        return mensagem.Contains("requests per day", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("request per day", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("daily request quota", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("daily requests quota", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("request quota per day", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("request limit per day", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("per-day request quota", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool EhCotaDiariaDeRequisicoes(GeminiApiException erro)
+    {
+        string mensagem = erro.Message;
+
+        if (!string.IsNullOrWhiteSpace(erro.Payload))
+        {
+            try
+            {
+                using var documento = JsonDocument.Parse(erro.Payload);
+                JsonElement objetoErro = ObterObjetoErro(documento.RootElement);
+
+                if (
+                    objetoErro.TryGetProperty("message", out var mensagemElemento)
+                    && mensagemElemento.ValueKind == JsonValueKind.String
+                )
+                {
+                    mensagem += " " + mensagemElemento.GetString();
+                }
+
+                if (
+                    objetoErro.TryGetProperty("details", out var detalhes)
+                    && detalhes.ValueKind == JsonValueKind.Array
+                )
+                {
+                    foreach (var detalhe in detalhes.EnumerateArray())
+                    {
+                        string? tipo = ObterStringOpcional(detalhe, "@type");
+
+                        if (
+                            tipo == null
+                            || !tipo.EndsWith("google.rpc.QuotaFailure", StringComparison.Ordinal)
+                            || detalhe.ValueKind != JsonValueKind.Object
+                            || !detalhe.TryGetProperty("violations", out var violacoes)
+                            || violacoes.ValueKind != JsonValueKind.Array
+                        )
+                        {
+                            continue;
+                        }
+
+                        foreach (var violacao in violacoes.EnumerateArray())
+                        {
+                            string? quotaId = ObterStringOpcional(violacao, "quotaId");
+                            string? quotaMetric = ObterStringOpcional(violacao, "quotaMetric");
+
+                            if (
+                                EhIdentificadorCotaDiaria(quotaId)
+                                || EhIdentificadorCotaDiaria(quotaMetric)
+                            )
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                // Mensagens explícitas ainda podem identificar a cota se o payload for parcial.
+            }
+        }
+
+        return EhMensagemDeCotaDiaria(mensagem);
     }
 
     private static HttpStatusCode? MapearCodigoErro(string? codigo)
@@ -765,6 +955,18 @@ public sealed class GeminiService : IGeminiService
                         ex
                     );
                 }
+                catch (GeminiApiException ex) when (EhCotaDiariaDeRequisicoes(ex))
+                {
+                    ultimoErro = ex;
+
+                    Debug.WriteLine(
+                        $"[PokéBus][Gemini] Cota diária de requisições esgotada para {modelo}; avançando para o próximo modelo."
+                    );
+
+                    // Cotas diárias não serão liberadas durante os retries deste modelo.
+                    // Passe imediatamente ao próximo para aproveitar a cota independente dele.
+                    break;
+                }
                 catch (HttpRequestException ex) when (EhModeloIndisponivel(ex))
                 {
                     ultimoErro = ex;
@@ -817,15 +1019,18 @@ public sealed class GeminiService : IGeminiService
     private sealed class GeminiApiException : HttpRequestException
     {
         public TimeSpan? RetryAfter { get; }
+        public string? Payload { get; }
 
         public GeminiApiException(
             string message,
             HttpStatusCode statusCode,
-            TimeSpan? retryAfter = null
+            TimeSpan? retryAfter = null,
+            string? payload = null
         )
             : base(message, null, statusCode)
         {
             RetryAfter = retryAfter;
+            Payload = payload;
         }
     }
 }
