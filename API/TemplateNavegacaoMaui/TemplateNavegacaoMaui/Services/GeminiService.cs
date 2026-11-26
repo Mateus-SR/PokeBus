@@ -686,22 +686,13 @@ public sealed class GeminiService : IGeminiService
 
         foreach (var detalhe in detalhes.EnumerateArray())
         {
-            if (
-                !detalhe.TryGetProperty("@type", out var tipoElemento)
-                || !tipoElemento.GetString()!.EndsWith(
-                    "google.rpc.RetryInfo",
-                    StringComparison.Ordinal
-                )
-                || !detalhe.TryGetProperty("retryDelay", out var intervaloElemento)
-            )
-            {
-                continue;
-            }
-
-            string? intervaloTexto = intervaloElemento.GetString();
+            string? tipo = ObterStringOpcional(detalhe, "@type");
+            string? intervaloTexto = ObterStringOpcional(detalhe, "retryDelay");
 
             if (
-                string.IsNullOrWhiteSpace(intervaloTexto)
+                tipo == null
+                || !tipo.EndsWith("google.rpc.RetryInfo", StringComparison.Ordinal)
+                || string.IsNullOrWhiteSpace(intervaloTexto)
                 || !intervaloTexto.EndsWith("s", StringComparison.Ordinal)
                 || !double.TryParse(
                     intervaloTexto[..^1],
@@ -720,6 +711,15 @@ public sealed class GeminiService : IGeminiService
         }
 
         return null;
+    }
+
+    private static string? ObterStringOpcional(JsonElement objeto, string propriedade)
+    {
+        return objeto.ValueKind == JsonValueKind.Object
+            && objeto.TryGetProperty(propriedade, out var valor)
+            && valor.ValueKind == JsonValueKind.String
+                ? valor.GetString()
+                : null;
     }
 
     private static JsonElement ObterObjetoErro(JsonElement raiz)
@@ -786,12 +786,12 @@ public sealed class GeminiService : IGeminiService
                 {
                     foreach (var detalhe in detalhes.EnumerateArray())
                     {
+                        string? tipo = ObterStringOpcional(detalhe, "@type");
+
                         if (
-                            !detalhe.TryGetProperty("@type", out var tipoElemento)
-                            || !tipoElemento.GetString()!.EndsWith(
-                                "google.rpc.QuotaFailure",
-                                StringComparison.Ordinal
-                            )
+                            tipo == null
+                            || !tipo.EndsWith("google.rpc.QuotaFailure", StringComparison.Ordinal)
+                            || detalhe.ValueKind != JsonValueKind.Object
                             || !detalhe.TryGetProperty("violations", out var violacoes)
                             || violacoes.ValueKind != JsonValueKind.Array
                         )
@@ -801,15 +801,8 @@ public sealed class GeminiService : IGeminiService
 
                         foreach (var violacao in violacoes.EnumerateArray())
                         {
-                            string? quotaId =
-                                violacao.TryGetProperty("quotaId", out var idElemento)
-                                    ? idElemento.GetString()
-                                    : null;
-
-                            string? quotaMetric =
-                                violacao.TryGetProperty("quotaMetric", out var metricElemento)
-                                    ? metricElemento.GetString()
-                                    : null;
+                            string? quotaId = ObterStringOpcional(violacao, "quotaId");
+                            string? quotaMetric = ObterStringOpcional(violacao, "quotaMetric");
 
                             if (
                                 EhIdentificadorCotaDiaria(quotaId)
