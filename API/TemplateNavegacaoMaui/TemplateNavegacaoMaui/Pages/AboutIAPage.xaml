@@ -11,13 +11,62 @@
             Padding="24"
             Spacing="16"
             VerticalOptions="Start">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="ResponsiveStates">
+                        <VisualState x:Name="Compact">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="12" />
+                                <Setter Property="Spacing" Value="12" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="DevelopmentHeading" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="DevelopmentText" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="ReviewText" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="RuntimeHeading" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="RuntimeIntro" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="TranslationText" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="NarrationText" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="ResponsibilityText" Property="Label.FontSize" Value="18" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Intermediate">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="600" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="18" />
+                                <Setter Property="Spacing" Value="14" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="34" />
+                                <Setter TargetName="DevelopmentHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="DevelopmentText" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="ReviewText" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="RuntimeHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="RuntimeIntro" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="TranslationText" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="NarrationText" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="ResponsibilityText" Property="Label.FontSize" Value="24" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Expanded">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="1000" />
+                            </VisualState.StateTriggers>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </VisualStateManager.VisualStateGroups>
 
             <Label
                 FontAttributes="Bold"
                 FontFamily="PokemonEmerald"
                 FontSize="40"
                 HorizontalTextAlignment="Center"
-                Text="Uso de Inteligência Artificial"
+                x:Name="PageHeading" Text="Uso de Inteligência Artificial"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
@@ -25,21 +74,21 @@
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="IA durante o desenvolvimento"
+                x:Name="DevelopmentHeading" Text="IA durante o desenvolvimento"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="Ferramentas de Inteligência Artificial Generativa foram utilizadas como apoio durante o desenvolvimento deste projeto. Elas auxiliaram na pesquisa e compreensão de tecnologias, no planejamento de funcionalidades, na elaboração e revisão de trechos de código, na identificação de erros e na documentação."
+                x:Name="DevelopmentText" Text="Ferramentas de Inteligência Artificial Generativa foram utilizadas como apoio durante o desenvolvimento deste projeto. Elas auxiliaram na pesquisa e compreensão de tecnologias, no planejamento de funcionalidades, na elaboração e revisão de trechos de código, na identificação de erros e na documentação."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="O uso dessas ferramentas não substituiu o desenvolvimento e a avaliação do projeto. As sugestões geradas foram analisadas, adaptadas e testadas durante a implementação."
+                x:Name="ReviewText" Text="O uso dessas ferramentas não substituiu o desenvolvimento e a avaliação do projeto. As sugestões geradas foram analisadas, adaptadas e testadas durante a implementação."
                 TextColor="Gray" />
 
             <BoxView
@@ -52,35 +101,35 @@
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="IA durante a execução"
+                x:Name="RuntimeHeading" Text="IA durante a execução"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="O aplicativo também utiliza a Gemini API em duas funcionalidades:"
+                x:Name="RuntimeIntro" Text="O aplicativo também utiliza a Gemini API em duas funcionalidades:"
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="Tradução da Pokédex: a descrição original de cada Pokémon, obtida pela PokeAPI, é enviada à Gemini para gerar uma versão em português."
+                x:Name="TranslationText" Text="Tradução da Pokédex: a descrição original de cada Pokémon, obtida pela PokeAPI, é enviada à Gemini para gerar uma versão em português."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="Narração das batalhas: após a simulação, a Gemini transforma os acontecimentos em uma narração textual, descrevendo os golpes e o resultado do confronto."
+                x:Name="NarrationText" Text="Narração das batalhas: após a simulação, a Gemini transforma os acontecimentos em uma narração textual, descrevendo os golpes e o resultado do confronto."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="É importante destacar que a IA não escolhe o vencedor nem calcula os danos das batalhas. Essas decisões são realizadas pelo sistema de simulação do próprio aplicativo. A Gemini é responsável apenas pela narração."
+                x:Name="ResponsibilityText" Text="É importante destacar que a IA não escolhe o vencedor nem calcula os danos das batalhas. Essas decisões são realizadas pelo sistema de simulação do próprio aplicativo. A Gemini é responsável apenas pela narração."
                 TextColor="Gray" />
 
         </VerticalStackLayout>

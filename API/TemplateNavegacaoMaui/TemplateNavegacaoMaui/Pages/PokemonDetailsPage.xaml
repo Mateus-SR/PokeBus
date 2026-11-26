@@ -9,21 +9,112 @@
 
     <!--  Cabeçalho fixo  -->
     <Grid
+        x:Name="PageLayout"
         Padding="20"
         RowDefinitions="Auto,*"
         RowSpacing="14">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="ResponsiveStates">
+                    <VisualState x:Name="Compact">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="Padding" Value="8" />
+                            <Setter Property="RowSpacing" Value="8" />
+                            <Setter TargetName="HeaderFrame" Property="Frame.Padding" Value="10" />
+                            <Setter TargetName="PokemonHeaderInfo" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="PokemonHeaderInfo" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PokemonHeaderInfo" Property="Grid.ColumnSpan" Value="3" />
+                            <Setter TargetName="FrontSprite" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="FrontSprite" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="FrontSprite" Property="VisualElement.WidthRequest" Value="120" />
+                            <Setter TargetName="FrontSprite" Property="VisualElement.HeightRequest" Value="120" />
+                            <Setter TargetName="BackSprite" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="BackSprite" Property="Grid.Column" Value="1" />
+                            <Setter TargetName="BackSprite" Property="VisualElement.WidthRequest" Value="120" />
+                            <Setter TargetName="BackSprite" Property="VisualElement.HeightRequest" Value="120" />
+                            <Setter TargetName="VoltarButton" Property="Button.FontSize" Value="16" />
+                            <Setter TargetName="VoltarButton" Property="VisualElement.WidthRequest" Value="100" />
+                            <Setter TargetName="PokemonNameLabel" Property="Label.FontSize" Value="28" />
+                            <Setter TargetName="PokemonIdLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="IdentificationStack" Property="View.Margin" Value="0" />
+                            <Setter TargetName="CodigoLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="SentidoLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="OnibusIdLabel" Property="Label.FontSize" Value="14" />
+                            <Setter TargetName="PrevisaoLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="InformationColumn" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="InformationColumn" Property="Grid.ColumnSpan" Value="2" />
+                            <Setter TargetName="PokedexColumn" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="PokedexColumn" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PokedexColumn" Property="Grid.ColumnSpan" Value="2" />
+                            <Setter TargetName="InformationTitle" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="PokedexTitle" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="TypeTitle" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="TypesValue" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="HeightTitle" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="HeightValue" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="WeightTitle" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="WeightValue" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="ExperienceTitle" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="ExperienceValue" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="AbilitiesTitle" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="AbilitiesValue" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="PokedexDescriptionLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="TraducaoStatusLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="StatsTitle" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="StatsValue" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="MovesTitle" Property="Label.FontSize" Value="26" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Intermediate">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="600" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="Padding" Value="14" />
+                            <Setter TargetName="HeaderFrame" Property="Frame.Padding" Value="14" />
+                            <Setter TargetName="FrontSprite" Property="VisualElement.WidthRequest" Value="200" />
+                            <Setter TargetName="FrontSprite" Property="VisualElement.HeightRequest" Value="200" />
+                            <Setter TargetName="BackSprite" Property="VisualElement.WidthRequest" Value="200" />
+                            <Setter TargetName="BackSprite" Property="VisualElement.HeightRequest" Value="200" />
+                            <Setter TargetName="PokemonNameLabel" Property="Label.FontSize" Value="34" />
+                            <Setter TargetName="PokemonIdLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="CodigoLabel" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="SentidoLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="OnibusIdLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="PrevisaoLabel" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="InformationTitle" Property="Label.FontSize" Value="30" />
+                            <Setter TargetName="PokedexTitle" Property="Label.FontSize" Value="30" />
+                            <Setter TargetName="PokedexDescriptionLabel" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="StatsTitle" Property="Label.FontSize" Value="30" />
+                            <Setter TargetName="StatsValue" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="MovesTitle" Property="Label.FontSize" Value="30" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Expanded">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="1000" />
+                        </VisualState.StateTriggers>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </VisualStateManager.VisualStateGroups>
 
         <Frame
+            x:Name="HeaderFrame"
             Grid.Row="0"
             BackgroundColor="White"
             BorderColor="#D8E5E2"
             CornerRadius="30"
             HasShadow="False">
 
-            <Grid ColumnDefinitions="*,Auto,Auto">
+            <Grid x:Name="HeaderGrid" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto">
 
                 <!--  Identificação  -->
                 <VerticalStackLayout
+                    x:Name="PokemonHeaderInfo"
                     Grid.Column="0"
                     Spacing="3"
                     VerticalOptions="Center">
@@ -39,43 +130,43 @@
                         TextColor="White"
                         WidthRequest="120" />
 
-                    <VerticalStackLayout Margin="0,0,0,30">
+                    <VerticalStackLayout x:Name="IdentificationStack" Margin="0,0,0,30">
                         <Label
                             FontAttributes="Bold"
                             FontFamily="PokemonEmerald"
                             FontSize="40"
-                            Text="{Binding Pokemon.Name}"
+                            x:Name="PokemonNameLabel" Text="{Binding Pokemon.Name}"
                             TextColor="{StaticResource PrimaryColor}" />
 
                         <Label
                             FontFamily="PokemonEmerald"
                             FontSize="24"
-                            Text="{Binding Pokemon.Id, StringFormat='Pokédex #{0}'}"
+                            x:Name="PokemonIdLabel" Text="{Binding Pokemon.Id, StringFormat='Pokédex #{0}'}"
                             TextColor="Gray" />
                     </VerticalStackLayout>
 
                     <Label
                         FontFamily="PokemonEmerald"
                         FontSize="30"
-                        Text="{Binding CodigoLetreiro, StringFormat='Linha {0}'}"
+                        x:Name="CodigoLabel" Text="{Binding CodigoLetreiro, StringFormat='Linha {0}'}"
                         TextColor="Black" />
 
                     <Label
                         FontFamily="PokemonEmerald"
                         FontSize="24"
-                        Text="{Binding SentidoLinha, StringFormat='Sentido {0}'}"
+                        x:Name="SentidoLabel" Text="{Binding SentidoLinha, StringFormat='Sentido {0}'}"
                         TextColor="Black" />
 
                     <Label
                         FontFamily="PokemonEmerald"
                         FontSize="20"
-                        Text="{Binding Id, StringFormat='ID do ônibus: {0}'}"
+                        x:Name="OnibusIdLabel" Text="{Binding Id, StringFormat='ID do ônibus: {0}'}"
                         TextColor="Gray" />
 
                     <Label
                         FontFamily="PokemonEmerald"
                         FontSize="30"
-                        Text="{Binding Previsao, StringFormat='Previsão: {0}'}"
+                        x:Name="PrevisaoLabel" Text="{Binding Previsao, StringFormat='Previsão: {0}'}"
                         TextColor="{StaticResource PrimaryColor}" />
 
 
@@ -84,6 +175,7 @@
 
                 <!--  Sprite frontal  -->
                 <controls:PokemonSpriteView
+                    x:Name="FrontSprite"
                     Grid.Column="1"
                     HeightRequest="288"
                     HorizontalOptions="Center"
@@ -93,6 +185,7 @@
 
                 <!--  Sprite traseiro  -->
                 <controls:PokemonSpriteView
+                    x:Name="BackSprite"
                     Grid.Column="2"
                     HeightRequest="288"
                     HorizontalOptions="Center"
@@ -108,10 +201,11 @@
 
             <VerticalStackLayout Padding="0" Spacing="14">
                 <!--  Informações e atributos base lado a lado  -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                <Grid x:Name="DetailsColumnsGrid" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="14">
 
                     <!--  Coluna 1: Informações  -->
                     <VerticalStackLayout
+                        x:Name="InformationColumn"
                         Grid.Column="0"
                         HorizontalOptions="Fill"
                         Spacing="14"
@@ -120,7 +214,7 @@
                         <Label
                             FontFamily="PokemonEmerald"
                             FontSize="34"
-                            Text="Informações"
+                            x:Name="InformationTitle" Text="Informações"
                             TextColor="{StaticResource PrimaryColor}" />
 
                         <Frame
@@ -136,13 +230,13 @@
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="24"
-                                        Text="Tipo"
+                                        x:Name="TypeTitle" Text="Tipo"
                                         TextColor="Gray" />
 
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="30"
-                                        Text="{Binding Pokemon.TypesText}"
+                                        x:Name="TypesValue" Text="{Binding Pokemon.TypesText}"
                                         TextColor="#263D3A" />
                                 </VerticalStackLayout>
 
@@ -154,13 +248,13 @@
                                         <Label
                                             FontFamily="PokemonEmerald"
                                             FontSize="24"
-                                            Text="Altura"
+                                            x:Name="HeightTitle" Text="Altura"
                                             TextColor="Gray" />
 
                                         <Label
                                             FontFamily="PokemonEmerald"
                                             FontSize="30"
-                                            Text="{Binding Pokemon.HeightText}"
+                                            x:Name="HeightValue" Text="{Binding Pokemon.HeightText}"
                                             TextColor="#263D3A" />
                                     </VerticalStackLayout>
 
@@ -169,13 +263,13 @@
                                         <Label
                                             FontFamily="PokemonEmerald"
                                             FontSize="24"
-                                            Text="Peso"
+                                            x:Name="WeightTitle" Text="Peso"
                                             TextColor="Gray" />
 
                                         <Label
                                             FontFamily="PokemonEmerald"
                                             FontSize="30"
-                                            Text="{Binding Pokemon.WeightText}"
+                                            x:Name="WeightValue" Text="{Binding Pokemon.WeightText}"
                                             TextColor="#263D3A" />
                                     </VerticalStackLayout>
 
@@ -187,13 +281,13 @@
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="24"
-                                        Text="Experiência-base"
+                                        x:Name="ExperienceTitle" Text="Experiência-base"
                                         TextColor="Gray" />
 
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="30"
-                                        Text="{Binding Pokemon.BaseExperienceText}"
+                                        x:Name="ExperienceValue" Text="{Binding Pokemon.BaseExperienceText}"
                                         TextColor="#263D3A" />
                                 </VerticalStackLayout>
 
@@ -203,13 +297,13 @@
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="24"
-                                        Text="Habilidades"
+                                        x:Name="AbilitiesTitle" Text="Habilidades"
                                         TextColor="Gray" />
 
                                     <Label
                                         FontFamily="PokemonEmerald"
                                         FontSize="26"
-                                        Text="{Binding Pokemon.AbilitiesText}"
+                                        x:Name="AbilitiesValue" Text="{Binding Pokemon.AbilitiesText}"
                                         TextColor="#263D3A" />
                                 </VerticalStackLayout>
 
@@ -219,6 +313,7 @@
 
                     <!--  Coluna 2: Pokédex e atributos base  -->
                     <VerticalStackLayout
+                        x:Name="PokedexColumn"
                         Grid.Column="1"
                         HorizontalOptions="Fill"
                         Spacing="14"
@@ -228,7 +323,7 @@
                         <Label
                             FontFamily="PokemonEmerald"
                             FontSize="34"
-                            Text="Descrição da Pokédex"
+                            x:Name="PokedexTitle" Text="Descrição da Pokédex"
                             TextColor="{StaticResource PrimaryColor}" />
 
 
@@ -268,7 +363,7 @@
                         <Label
                             FontFamily="PokemonEmerald"
                             FontSize="34"
-                            Text="Atributos base"
+                            x:Name="StatsTitle" Text="Atributos base"
                             TextColor="{StaticResource PrimaryColor}" />
 
                         <Frame
@@ -283,7 +378,7 @@
                                 FontSize="26"
                                 LineBreakMode="WordWrap"
                                 LineHeight="1"
-                                Text="{Binding Pokemon.StatsText}"
+                                x:Name="StatsValue" Text="{Binding Pokemon.StatsText}"
                                 TextColor="#263D3A" />
 
                         </Frame>
@@ -297,7 +392,7 @@
                 <Label
                     FontFamily="PokemonEmerald"
                     FontSize="34"
-                    Text="Golpes"
+                    x:Name="MovesTitle" Text="Golpes"
                     TextColor="{StaticResource PrimaryColor}" />
 
                 <FlexLayout
@@ -320,6 +415,49 @@
                                 FlexLayout.Basis="20%"
                                 HasShadow="False"
                                 VerticalOptions="Start">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="MoveCardStates">
+                                            <VisualState x:Name="Compact">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="0" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter Property="FlexLayout.Basis" Value="46%" />
+                                                    <Setter Property="Padding" Value="10" />
+                                                    <Setter TargetName="MoveName" Property="Label.FontSize" Value="18" />
+                                                    <Setter TargetName="MoveType" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="PowerTitle" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="PowerValue" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="AccuracyTitle" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="AccuracyValue" Property="Label.FontSize" Value="16" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Intermediate">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="600" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter Property="FlexLayout.Basis" Value="30%" />
+                                                    <Setter TargetName="MoveName" Property="Label.FontSize" Value="22" />
+                                                    <Setter TargetName="MoveType" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="PowerTitle" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="PowerValue" Property="Label.FontSize" Value="18" />
+                                                    <Setter TargetName="AccuracyTitle" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="AccuracyValue" Property="Label.FontSize" Value="18" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Expanded">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="1000" />
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter Property="FlexLayout.Basis" Value="20%" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
 
                                 <VerticalStackLayout HorizontalOptions="Fill" Spacing="7">
 
@@ -332,7 +470,7 @@
                                             FontFamily="PokemonEmerald"
                                             FontSize="26"
                                             LineBreakMode="WordWrap"
-                                            Text="{Binding Nome}"
+                                            x:Name="MoveName" Text="{Binding Nome}"
                                             TextColor="#263D3A"
                                             TextTransform="Uppercase"
                                             VerticalTextAlignment="Center" />
@@ -343,7 +481,7 @@
                                             FontFamily="PokemonEmerald"
                                             FontSize="18"
                                             HorizontalTextAlignment="End"
-                                            Text="{Binding Tipo}"
+                                            x:Name="MoveType" Text="{Binding Tipo}"
                                             TextColor="{StaticResource PrimaryColor}"
                                             VerticalTextAlignment="Center" />
 
@@ -358,13 +496,13 @@
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="16"
-                                                Text="Potência"
+                                                x:Name="PowerTitle" Text="Potência"
                                                 TextColor="Gray" />
 
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="20"
-                                                Text="{Binding Potencia}"
+                                                x:Name="PowerValue" Text="{Binding Potencia}"
                                                 TextColor="#263D3A" />
                                         </VerticalStackLayout>
 
@@ -373,13 +511,13 @@
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="16"
-                                                Text="Precisão"
+                                                x:Name="AccuracyTitle" Text="Precisão"
                                                 TextColor="Gray" />
 
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="20"
-                                                Text="{Binding Precisao, StringFormat='{0}%'}"
+                                                x:Name="AccuracyValue" Text="{Binding Precisao, StringFormat='{0}%'}"
                                                 TextColor="#263D3A" />
                                         </VerticalStackLayout>
 

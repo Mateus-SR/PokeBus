@@ -7,9 +7,70 @@
   Title="PokéBus Monitoramento"
   BackgroundColor="{StaticResource PageBackground}"
 >
-  <Grid RowDefinitions="Auto,Auto,*" Padding="20" RowSpacing="14">
+  <Grid x:Name="PageLayout" RowDefinitions="Auto,Auto,*" Padding="20" RowSpacing="14">
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroupList>
+        <VisualStateGroup x:Name="ResponsiveStates">
+          <VisualState x:Name="Compact">
+            <VisualState.StateTriggers>
+              <AdaptiveTrigger MinWindowWidth="0" />
+            </VisualState.StateTriggers>
+            <VisualState.Setters>
+              <Setter Property="Padding" Value="10" />
+              <Setter TargetName="PageTitle" Property="Label.FontSize" Value="30" />
+              <Setter TargetName="PageDescription" Property="Label.FontSize" Value="18" />
+              <Setter TargetName="InfoCard" Property="Grid.Row" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.Column" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="StatusLabel" Property="Grid.Row" Value="1" />
+              <Setter TargetName="StatusLabel" Property="Grid.Column" Value="0" />
+              <Setter TargetName="StatusLabel" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Row" Value="2" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Column" Value="0" />
+              <Setter TargetName="AtualizarButton" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="InfoCard" Property="Label.FontSize" Value="16" />
+              <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="16" />
+              <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="16" />
+            </VisualState.Setters>
+          </VisualState>
+          <VisualState x:Name="Intermediate">
+            <VisualState.StateTriggers>
+              <AdaptiveTrigger MinWindowWidth="600" />
+            </VisualState.StateTriggers>
+            <VisualState.Setters>
+              <Setter Property="Padding" Value="14" />
+              <Setter TargetName="PageTitle" Property="Label.FontSize" Value="36" />
+              <Setter TargetName="PageDescription" Property="Label.FontSize" Value="22" />
+              <Setter TargetName="InfoCard" Property="Grid.Row" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.Column" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="StatusLabel" Property="Grid.Row" Value="1" />
+              <Setter TargetName="StatusLabel" Property="Grid.Column" Value="0" />
+              <Setter TargetName="StatusLabel" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Row" Value="2" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Column" Value="0" />
+              <Setter TargetName="AtualizarButton" Property="Grid.ColumnSpan" Value="3" />
+              <Setter TargetName="InfoCard" Property="Label.FontSize" Value="20" />
+              <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="20" />
+              <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="20" />
+            </VisualState.Setters>
+          </VisualState>
+          <VisualState x:Name="WideIntermediate">
+            <VisualState.StateTriggers>
+              <AdaptiveTrigger MinWindowWidth="800" />
+            </VisualState.StateTriggers>
+          </VisualState>
+          <VisualState x:Name="Expanded">
+            <VisualState.StateTriggers>
+              <AdaptiveTrigger MinWindowWidth="1000" />
+            </VisualState.StateTriggers>
+          </VisualState>
+        </VisualStateGroup>
+      </VisualStateGroupList>
+    </VisualStateManager.VisualStateGroups>
     <VerticalStackLayout Grid.Row="0" Spacing="5">
       <Label
+        x:Name="PageTitle"
         Text="PokéBus Monitoramento"
         FontFamily="PokemonEmerald"
         FontSize="44"
@@ -18,6 +79,7 @@
       />
 
       <Label
+        x:Name="PageDescription"
         Text="Previsões de chegada consultadas em tempo real, usando como base o Backend do Busca Bus, nosso Projeto Integrado do 4º semestre."
         FontFamily="PokemonEmerald"
         FontSize="30"
@@ -25,7 +87,7 @@
       />
     </VerticalStackLayout>
 
-    <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+    <Grid x:Name="ToolbarGrid" Grid.Row="1" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15">
       <Label
         Grid.Column="1"
         x:Name="StatusLabel"
@@ -61,7 +123,37 @@
       <CollectionView ItemsSource="{Binding Onibus}" SelectionMode="None">
         <CollectionView.EmptyView>
           <VerticalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="Center">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroupList>
+                <VisualStateGroup x:Name="EmptyViewStates">
+                  <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                      <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="20" />
+                      <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="18" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Intermediate">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                      <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="22" />
+                      <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="22" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Expanded">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateGroupList>
+            </VisualStateManager.VisualStateGroups>
             <Label
+              x:Name="EmptyTitle"
               Text="Nenhum veículo para exibir"
               FontFamily="PokemonEmerald"
               FontSize="26"
@@ -70,6 +162,7 @@
             />
 
             <Label
+              x:Name="EmptyDescription"
               Text="Use Atualizar para consultar novamente."
               FontFamily="PokemonEmerald"
               FontSize="26"
@@ -89,13 +182,86 @@
               BorderColor="#D8E5E2"
               BackgroundColor="White"
             >
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroupList>
+                  <VisualStateGroup x:Name="CardSizeStates">
+                    <VisualState x:Name="Compact">
+                      <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                      </VisualState.StateTriggers>
+                      <VisualState.Setters>
+                        <Setter Property="Margin" Value="4,6" />
+                        <Setter Property="CornerRadius" Value="24" />
+                      </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Intermediate">
+                      <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                      </VisualState.StateTriggers>
+                      <VisualState.Setters>
+                        <Setter Property="Margin" Value="10" />
+                        <Setter Property="CornerRadius" Value="36" />
+                      </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Expanded">
+                      <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                      </VisualState.StateTriggers>
+                    </VisualState>
+                  </VisualStateGroup>
+                </VisualStateGroupList>
+              </VisualStateManager.VisualStateGroups>
               <Frame.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnOnibusTapped" />
               </Frame.GestureRecognizers>
 
-              <Grid ColumnDefinitions="*,Auto,144" ColumnSpacing="10">
+              <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <VisualStateManager.VisualStateGroups>
+                  <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CardContentStates">
+                      <VisualState x:Name="Compact">
+                        <VisualState.StateTriggers>
+                          <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                          <Setter Property="ColumnSpacing" Value="6" />
+                          <Setter TargetName="LineInfo" Property="View.Margin" Value="8" />
+                          <Setter TargetName="LineCode" Property="Label.FontSize" Value="30" />
+                          <Setter TargetName="LineDirection" Property="Label.FontSize" Value="18" />
+                          <Setter TargetName="PokemonName" Property="Label.FontSize" Value="18" />
+                          <Setter TargetName="PredictionTitle" Property="Label.FontSize" Value="14" />
+                          <Setter TargetName="PredictionValue" Property="Label.FontSize" Value="30" />
+                          <Setter TargetName="BusPokemonSprite" Property="VisualElement.WidthRequest" Value="84" />
+                          <Setter TargetName="BusPokemonSprite" Property="VisualElement.HeightRequest" Value="84" />
+                        </VisualState.Setters>
+                      </VisualState>
+                      <VisualState x:Name="Intermediate">
+                        <VisualState.StateTriggers>
+                          <AdaptiveTrigger MinWindowWidth="600" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                          <Setter Property="ColumnSpacing" Value="8" />
+                          <Setter TargetName="LineInfo" Property="View.Margin" Value="12" />
+                          <Setter TargetName="LineCode" Property="Label.FontSize" Value="38" />
+                          <Setter TargetName="LineDirection" Property="Label.FontSize" Value="26" />
+                          <Setter TargetName="PokemonName" Property="Label.FontSize" Value="22" />
+                          <Setter TargetName="PredictionTitle" Property="Label.FontSize" Value="18" />
+                          <Setter TargetName="PredictionValue" Property="Label.FontSize" Value="40" />
+                          <Setter TargetName="BusPokemonSprite" Property="VisualElement.WidthRequest" Value="112" />
+                          <Setter TargetName="BusPokemonSprite" Property="VisualElement.HeightRequest" Value="112" />
+                        </VisualState.Setters>
+                      </VisualState>
+                      <VisualState x:Name="Expanded">
+                        <VisualState.StateTriggers>
+                          <AdaptiveTrigger MinWindowWidth="1000" />
+                        </VisualState.StateTriggers>
+                      </VisualState>
+                    </VisualStateGroup>
+                  </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
                 <!-- Informações da linha -->
                 <VerticalStackLayout
+                  x:Name="LineInfo"
                   Grid.Column="0"
                   Margin="20"
                   Spacing="5"
@@ -103,6 +269,7 @@
                 >
                   <!-- Código da linha -->
                   <Label
+                    x:Name="LineCode"
                     Text="{Binding CodigoLetreiro}"
                     FontSize="54"
                     TextColor="{StaticResource PrimaryColor}"
@@ -111,6 +278,7 @@
 
                   <!-- Sentido -->
                   <Label
+                    x:Name="LineDirection"
                     Text="{Binding SentidoLinha}"
                     FontSize="34"
                     TextColor="{StaticResource PrimaryColor}"
@@ -119,6 +287,7 @@
 
                   <!-- Nome do Pokémon -->
                   <Label
+                    x:Name="PokemonName"
                     Text="{Binding PokemonName}"
                     FontSize="30"
                     FontFamily="PokemonEmerald"
@@ -128,12 +297,14 @@
 
                 <!-- Previsão -->
                 <VerticalStackLayout
+                  x:Name="PredictionInfo"
                   Grid.Column="1"
                   Spacing="2"
                   VerticalOptions="Center"
                   HorizontalOptions="End"
                 >
                   <Label
+                    x:Name="PredictionTitle"
                     Text="PREVISÃO"
                     FontFamily="PokemonEmerald"
                     FontSize="30"
@@ -142,6 +313,7 @@
                   />
 
                   <Label
+                    x:Name="PredictionValue"
                     Text="{Binding Previsao}"
                     FontFamily="PokemonEmerald"
                     FontSize="54"
@@ -152,6 +324,7 @@
 
                 <!-- Sprite do Pokémon -->
                 <controls:PokemonSpriteView
+                  x:Name="BusPokemonSprite"
                   Grid.Column="2"
                   Url="{Binding PokemonSpriteUrl}"
                   WidthRequest="144"

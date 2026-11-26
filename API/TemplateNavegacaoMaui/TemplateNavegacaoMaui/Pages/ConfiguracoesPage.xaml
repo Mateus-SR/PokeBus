@@ -11,27 +11,74 @@
             Padding="24"
             Spacing="16"
             VerticalOptions="Start">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="ResponsiveStates">
+                        <VisualState x:Name="Compact">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="12" />
+                                <Setter Property="Spacing" Value="12" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="KeyDescription" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="PrivacyDescription" Property="Label.FontSize" Value="16" />
+                                <Setter TargetName="GerarChaveButton" Property="Button.FontSize" Value="18" />
+                                <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="ActionsLayout" Property="Grid.RowSpacing" Value="8" />
+                                <Setter TargetName="SalvarButton" Property="Grid.Row" Value="0" />
+                                <Setter TargetName="SalvarButton" Property="Grid.ColumnSpan" Value="2" />
+                                <Setter TargetName="RemoverButton" Property="Grid.Row" Value="1" />
+                                <Setter TargetName="RemoverButton" Property="Grid.Column" Value="0" />
+                                <Setter TargetName="RemoverButton" Property="Grid.ColumnSpan" Value="2" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Intermediate">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="600" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="18" />
+                                <Setter Property="Spacing" Value="14" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="34" />
+                                <Setter TargetName="KeyDescription" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="PrivacyDescription" Property="Label.FontSize" Value="20" />
+                                <Setter TargetName="GerarChaveButton" Property="Button.FontSize" Value="24" />
+                                <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="22" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Expanded">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="1000" />
+                            </VisualState.StateTriggers>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </VisualStateManager.VisualStateGroups>
 
             <Label
                 FontAttributes="Bold"
                 FontFamily="PokemonEmerald"
                 FontSize="40"
                 HorizontalTextAlignment="Center"
-                Text="Chave da Gemini API"
+                x:Name="PageHeading" Text="Chave da Gemini API"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="A narração das batalhas e a tradução da Pokédex usam a Gemini API. Cada pessoa usa a própria chave, gratuita no Google AI Studio."
+                x:Name="KeyDescription" Text="A narração das batalhas e a tradução da Pokédex usam a Gemini API. Cada pessoa usa a própria chave, gratuita no Google AI Studio."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="26"
                 HorizontalTextAlignment="Center"
-                Text="A chave fica guardada somente neste dispositivo e é enviada apenas ao Google."
+                x:Name="PrivacyDescription" Text="A chave fica guardada somente neste dispositivo e é enviada apenas ao Google."
                 TextColor="Gray" />
 
             <Button
@@ -62,21 +109,25 @@
                 TextColor="#000000"
                 PlaceholderColor="Gray" />
 
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+            <Grid x:Name="ActionsLayout" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
                 <Button
                     x:Name="SalvarButton"
+                    HorizontalOptions="Fill"
+                    Grid.Column="0"
                     Clicked="OnSalvarClicked"
                     FontFamily="PokemonEmerald"
                     FontSize="30"
                     Text="SALVAR" />
                 <Button
                     x:Name="RemoverButton"
+                    HorizontalOptions="Fill"
+                    Grid.Column="1"
                     Clicked="OnRemoverClicked"
                     FontFamily="PokemonEmerald"
                     FontSize="30"
                     IsVisible="False"
                     Text="REMOVER" />
-            </HorizontalStackLayout>
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
