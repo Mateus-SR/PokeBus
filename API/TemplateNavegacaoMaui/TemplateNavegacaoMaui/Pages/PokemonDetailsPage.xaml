@@ -24,11 +24,9 @@
                             <Setter Property="Padding" Value="8" />
                             <Setter Property="RowSpacing" Value="8" />
                             <Setter TargetName="HeaderFrame" Property="Frame.Padding" Value="10" />
-                            <Setter TargetName="HeaderGrid" Property="Grid.ColumnDefinitions" Value="*,*" />
-                            <Setter TargetName="HeaderGrid" Property="Grid.RowDefinitions" Value="Auto,Auto" />
                             <Setter TargetName="PokemonHeaderInfo" Property="Grid.Row" Value="0" />
                             <Setter TargetName="PokemonHeaderInfo" Property="Grid.Column" Value="0" />
-                            <Setter TargetName="PokemonHeaderInfo" Property="Grid.ColumnSpan" Value="2" />
+                            <Setter TargetName="PokemonHeaderInfo" Property="Grid.ColumnSpan" Value="3" />
                             <Setter TargetName="FrontSprite" Property="Grid.Row" Value="1" />
                             <Setter TargetName="FrontSprite" Property="Grid.Column" Value="0" />
                             <Setter TargetName="FrontSprite" Property="VisualElement.WidthRequest" Value="120" />
@@ -46,11 +44,11 @@
                             <Setter TargetName="SentidoLabel" Property="Label.FontSize" Value="16" />
                             <Setter TargetName="OnibusIdLabel" Property="Label.FontSize" Value="14" />
                             <Setter TargetName="PrevisaoLabel" Property="Label.FontSize" Value="20" />
-                            <Setter TargetName="DetailsColumnsGrid" Property="Grid.ColumnDefinitions" Value="*" />
-                            <Setter TargetName="DetailsColumnsGrid" Property="Grid.RowDefinitions" Value="Auto,Auto" />
                             <Setter TargetName="InformationColumn" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="InformationColumn" Property="Grid.ColumnSpan" Value="2" />
                             <Setter TargetName="PokedexColumn" Property="Grid.Row" Value="1" />
                             <Setter TargetName="PokedexColumn" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="PokedexColumn" Property="Grid.ColumnSpan" Value="2" />
                             <Setter TargetName="InformationTitle" Property="Label.FontSize" Value="26" />
                             <Setter TargetName="PokedexTitle" Property="Label.FontSize" Value="26" />
                             <Setter TargetName="TypeTitle" Property="Label.FontSize" Value="18" />
@@ -112,7 +110,7 @@
             CornerRadius="30"
             HasShadow="False">
 
-            <Grid x:Name="HeaderGrid" ColumnDefinitions="*,Auto,Auto">
+            <Grid x:Name="HeaderGrid" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto">
 
                 <!--  Identificação  -->
                 <VerticalStackLayout
@@ -203,7 +201,7 @@
 
             <VerticalStackLayout Padding="0" Spacing="14">
                 <!--  Informações e atributos base lado a lado  -->
-                <Grid x:Name="DetailsColumnsGrid" ColumnDefinitions="*,*" ColumnSpacing="14">
+                <Grid x:Name="DetailsColumnsGrid" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="14">
 
                     <!--  Coluna 1: Informações  -->
                     <VerticalStackLayout

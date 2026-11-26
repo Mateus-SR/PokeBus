@@ -22,7 +22,7 @@
                 <Setter TargetName="ArenaSubtitle" Property="Label.FontSize" Value="22" />
                 <Setter TargetName="BattlesTitle" Property="Label.FontSize" Value="22" />
                 <Setter TargetName="BattlesDescription" Property="Label.FontSize" Value="18" />
-                <Setter TargetName="QuantityLabel" Property="Label.FontSize" Value="18" />
+                <Setter TargetName="QuantidadeLabel" Property="Label.FontSize" Value="18" />
                 <Setter TargetName="BatalharButton" Property="Button.FontSize" Value="20" />
                 <Setter TargetName="FootnoteLabel" Property="Label.FontSize" Value="16" />
               </VisualState.Setters>
@@ -38,7 +38,7 @@
                 <Setter TargetName="ArenaSubtitle" Property="Label.FontSize" Value="26" />
                 <Setter TargetName="BattlesTitle" Property="Label.FontSize" Value="26" />
                 <Setter TargetName="BattlesDescription" Property="Label.FontSize" Value="22" />
-                <Setter TargetName="QuantityLabel" Property="Label.FontSize" Value="22" />
+                <Setter TargetName="QuantidadeLabel" Property="Label.FontSize" Value="22" />
                 <Setter TargetName="BatalharButton" Property="Button.FontSize" Value="24" />
                 <Setter TargetName="FootnoteLabel" Property="Label.FontSize" Value="20" />
               </VisualState.Setters>
@@ -89,7 +89,7 @@
 
       <Label
         x:Name="QuantidadeLabel"
-        x:Name="QuantityLabel" Text="Verificando Pokémon disponíveis..."
+        Text="Verificando Pokémon disponíveis..."
         FontFamily="PokemonEmerald"
         FontSize="26"
         HorizontalTextAlignment="Center"

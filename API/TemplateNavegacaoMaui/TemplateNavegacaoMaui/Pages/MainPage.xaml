@@ -19,15 +19,15 @@
               <Setter Property="Padding" Value="10" />
               <Setter TargetName="PageTitle" Property="Label.FontSize" Value="30" />
               <Setter TargetName="PageDescription" Property="Label.FontSize" Value="18" />
-              <Setter TargetName="ToolbarGrid" Property="Grid.ColumnDefinitions" Value="*" />
-              <Setter TargetName="ToolbarGrid" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
               <Setter TargetName="InfoCard" Property="Grid.Row" Value="0" />
               <Setter TargetName="InfoCard" Property="Grid.Column" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="StatusLabel" Property="Grid.Row" Value="1" />
               <Setter TargetName="StatusLabel" Property="Grid.Column" Value="0" />
+              <Setter TargetName="StatusLabel" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="AtualizarButton" Property="Grid.Row" Value="2" />
               <Setter TargetName="AtualizarButton" Property="Grid.Column" Value="0" />
-              <Setter TargetName="AtualizarButton" Property="VisualElement.HorizontalOptions" Value="Start" />
+              <Setter TargetName="AtualizarButton" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="InfoCard" Property="Label.FontSize" Value="16" />
               <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="16" />
               <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="16" />
@@ -41,14 +41,15 @@
               <Setter Property="Padding" Value="14" />
               <Setter TargetName="PageTitle" Property="Label.FontSize" Value="36" />
               <Setter TargetName="PageDescription" Property="Label.FontSize" Value="22" />
-              <Setter TargetName="ToolbarGrid" Property="Grid.ColumnDefinitions" Value="*" />
-              <Setter TargetName="ToolbarGrid" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
               <Setter TargetName="InfoCard" Property="Grid.Row" Value="0" />
               <Setter TargetName="InfoCard" Property="Grid.Column" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="StatusLabel" Property="Grid.Row" Value="1" />
               <Setter TargetName="StatusLabel" Property="Grid.Column" Value="0" />
+              <Setter TargetName="StatusLabel" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="AtualizarButton" Property="Grid.Row" Value="2" />
               <Setter TargetName="AtualizarButton" Property="Grid.Column" Value="0" />
+              <Setter TargetName="AtualizarButton" Property="Grid.ColumnSpan" Value="3" />
               <Setter TargetName="InfoCard" Property="Label.FontSize" Value="20" />
               <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="20" />
               <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="20" />
@@ -86,7 +87,7 @@
       />
     </VerticalStackLayout>
 
-    <Grid x:Name="ToolbarGrid" Grid.Row="1" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="15">
+    <Grid x:Name="ToolbarGrid" Grid.Row="1" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15">
       <Label
         Grid.Column="1"
         x:Name="StatusLabel"
@@ -214,7 +215,7 @@
                 <TapGestureRecognizer Tapped="OnOnibusTapped" />
               </Frame.GestureRecognizers>
 
-              <Grid ColumnDefinitions="*,Auto,144" ColumnSpacing="10">
+              <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
                 <VisualStateManager.VisualStateGroups>
                   <VisualStateGroupList>
                     <VisualStateGroup x:Name="CardContentStates">
@@ -223,7 +224,6 @@
                           <AdaptiveTrigger MinWindowWidth="0" />
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
-                          <Setter Property="ColumnDefinitions" Value="*,Auto,84" />
                           <Setter Property="ColumnSpacing" Value="6" />
                           <Setter TargetName="LineInfo" Property="View.Margin" Value="8" />
                           <Setter TargetName="LineCode" Property="Label.FontSize" Value="30" />
@@ -240,7 +240,6 @@
                           <AdaptiveTrigger MinWindowWidth="600" />
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
-                          <Setter Property="ColumnDefinitions" Value="*,Auto,112" />
                           <Setter Property="ColumnSpacing" Value="8" />
                           <Setter TargetName="LineInfo" Property="View.Margin" Value="12" />
                           <Setter TargetName="LineCode" Property="Label.FontSize" Value="38" />

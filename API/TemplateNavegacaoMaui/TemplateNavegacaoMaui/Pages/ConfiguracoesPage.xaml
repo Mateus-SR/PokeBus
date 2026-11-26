@@ -27,14 +27,12 @@
                                 <Setter TargetName="PrivacyDescription" Property="Label.FontSize" Value="16" />
                                 <Setter TargetName="GerarChaveButton" Property="Button.FontSize" Value="18" />
                                 <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="18" />
-                                <Setter TargetName="ActionsLayout" Property="Grid.ColumnDefinitions" Value="*" />
-                                <Setter TargetName="ActionsLayout" Property="Grid.RowDefinitions" Value="Auto,Auto" />
                                 <Setter TargetName="ActionsLayout" Property="Grid.RowSpacing" Value="8" />
                                 <Setter TargetName="SalvarButton" Property="Grid.Row" Value="0" />
+                                <Setter TargetName="SalvarButton" Property="Grid.ColumnSpan" Value="2" />
                                 <Setter TargetName="RemoverButton" Property="Grid.Row" Value="1" />
                                 <Setter TargetName="RemoverButton" Property="Grid.Column" Value="0" />
-                                <Setter TargetName="SalvarButton" Property="VisualElement.HorizontalOptions" Value="Fill" />
-                                <Setter TargetName="RemoverButton" Property="VisualElement.HorizontalOptions" Value="Fill" />
+                                <Setter TargetName="RemoverButton" Property="Grid.ColumnSpan" Value="2" />
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Intermediate">
@@ -111,9 +109,10 @@
                 TextColor="#000000"
                 PlaceholderColor="Gray" />
 
-            <Grid x:Name="ActionsLayout" ColumnDefinitions="Auto,Auto" RowDefinitions="Auto">
+            <Grid x:Name="ActionsLayout" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
                 <Button
                     x:Name="SalvarButton"
+                    HorizontalOptions="Fill"
                     Grid.Column="0"
                     Clicked="OnSalvarClicked"
                     FontFamily="PokemonEmerald"
@@ -121,6 +120,7 @@
                     Text="SALVAR" />
                 <Button
                     x:Name="RemoverButton"
+                    HorizontalOptions="Fill"
                     Grid.Column="1"
                     Clicked="OnRemoverClicked"
                     FontFamily="PokemonEmerald"

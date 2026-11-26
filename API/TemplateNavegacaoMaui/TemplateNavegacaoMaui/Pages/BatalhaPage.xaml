@@ -22,25 +22,23 @@
                         <VisualState.Setters>
                             <Setter Property="Margin" Value="8,6" />
                             <Setter TargetName="BattleTitle" Property="Label.FontSize" Value="26" />
-                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnDefinitions" Value="*" />
-                            <Setter TargetName="MainContentGrid" Property="Grid.RowDefinitions" Value="Auto,2,*" />
                             <Setter TargetName="MainContentGrid" Property="Grid.ColumnSpacing" Value="0" />
                             <Setter TargetName="MainContentGrid" Property="Grid.RowSpacing" Value="8" />
                             <Setter TargetName="BattleFieldPanel" Property="Grid.Column" Value="0" />
                             <Setter TargetName="BattleFieldPanel" Property="Grid.Row" Value="0" />
-                            <Setter TargetName="BattleFieldPanel" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.ColumnSpan" Value="3" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.RowSpan" Value="1" />
                             <Setter TargetName="LayoutDivider" Property="Grid.Column" Value="0" />
                             <Setter TargetName="LayoutDivider" Property="Grid.Row" Value="1" />
-                            <Setter TargetName="LayoutDivider" Property="VisualElement.WidthRequest" Value="0" />
+                            <Setter TargetName="LayoutDivider" Property="Grid.ColumnSpan" Value="3" />
+                            <Setter TargetName="LayoutDivider" Property="Grid.RowSpan" Value="1" />
                             <Setter TargetName="LayoutDivider" Property="VisualElement.HeightRequest" Value="2" />
-                            <Setter TargetName="LayoutDivider" Property="VisualElement.HorizontalOptions" Value="Fill" />
-                            <Setter TargetName="LayoutDivider" Property="VisualElement.VerticalOptions" Value="Center" />
                             <Setter TargetName="NarrationPanel" Property="Grid.Column" Value="0" />
                             <Setter TargetName="NarrationPanel" Property="Grid.Row" Value="2" />
+                            <Setter TargetName="NarrationPanel" Property="Grid.ColumnSpan" Value="3" />
+                            <Setter TargetName="NarrationPanel" Property="Grid.RowSpan" Value="1" />
                             <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="0" />
-                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,108" />
                             <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnSpacing" Value="6" />
-                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="120,*" />
                             <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnSpacing" Value="4" />
                             <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="108" />
                             <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="108" />
@@ -73,14 +71,10 @@
                         <VisualState.Setters>
                             <Setter Property="Margin" Value="12,8" />
                             <Setter TargetName="BattleTitle" Property="Label.FontSize" Value="34" />
-                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnDefinitions" Value="1.05*,2,0.95*" />
                             <Setter TargetName="MainContentGrid" Property="Grid.ColumnSpacing" Value="8" />
-                            <Setter TargetName="BattleFieldPanel" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
                             <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="0" />
-                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,104" />
                             <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="104" />
                             <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="104" />
-                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="112,*" />
                             <Setter TargetName="PokemonProximoImage" Property="VisualElement.WidthRequest" Value="112" />
                             <Setter TargetName="PokemonProximoImage" Property="VisualElement.HeightRequest" Value="112" />
                             <Setter TargetName="PokemonDistanteLabel" Property="Label.FontSize" Value="28" />
@@ -131,11 +125,13 @@
             x:Name="MainContentGrid"
             Grid.Row="1"
             ColumnDefinitions="0.92*,2,1.08*"
-            ColumnSpacing="12">
+            RowDefinitions="Auto,2,*"
+            ColumnSpacing="12"
+            RowSpacing="8">
 
 
             <!--  CAMPO DE BATALHA  -->
-            <Grid x:Name="BattleFieldPanel" Grid.Column="0" RowDefinitions="*,Auto,Auto">
+            <Grid x:Name="BattleFieldPanel" Grid.Column="0" Grid.RowSpan="3" RowDefinitions="*,Auto,Auto">
 
 
                 <!--  POSIÇÕES FIXAS DOS POKÉMON  -->
@@ -150,7 +146,7 @@
                     <Grid
                         x:Name="PokemonDistanteRow"
                         Grid.Row="0"
-                        ColumnDefinitions="*,216"
+                        ColumnDefinitions="*,Auto"
                         ColumnSpacing="16"
                         VerticalOptions="End">
 
@@ -214,7 +210,7 @@
                     <Grid
                         x:Name="PokemonProximoRow"
                         Grid.Row="1"
-                        ColumnDefinitions="288,*"
+                        ColumnDefinitions="Auto,*"
                         ColumnSpacing="4"
                         VerticalOptions="Start">
 
@@ -304,7 +300,8 @@
             <BoxView
                 x:Name="LayoutDivider"
                 Grid.Column="1"
-                HorizontalOptions="Center"
+                Grid.RowSpan="3"
+                HorizontalOptions="Fill"
                 VerticalOptions="Fill"
                 WidthRequest="2"
                 Color="{StaticResource PrimaryColor}" />
@@ -313,6 +310,7 @@
             <Grid
                 x:Name="NarrationPanel"
                 Grid.Column="2"
+                Grid.RowSpan="3"
                 RowDefinitions="Auto,Auto,*,Auto"
                 RowSpacing="10">
 
