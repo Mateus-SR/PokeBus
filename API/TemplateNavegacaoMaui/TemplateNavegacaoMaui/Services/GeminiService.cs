@@ -741,9 +741,12 @@ public sealed class GeminiService : IGeminiService
         if (string.IsNullOrWhiteSpace(identificador))
             return false;
 
-        string normalizado = string.Concat(
-            identificador.Where(char.IsLetterOrDigit)
-        ).ToLowerInvariant();
+        string normalizado = identificador
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .Replace("/", string.Empty, StringComparison.Ordinal)
+            .Replace(".", string.Empty, StringComparison.Ordinal)
+            .ToLowerInvariant();
 
         return normalizado.Contains("requestsperday", StringComparison.Ordinal)
             || normalizado.Contains("requestperday", StringComparison.Ordinal);
