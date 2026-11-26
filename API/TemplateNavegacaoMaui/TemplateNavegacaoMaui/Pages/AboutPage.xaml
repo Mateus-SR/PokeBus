@@ -78,7 +78,7 @@
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                x:Name=""ApiDescription"" Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
+                x:Name="ApiDescription" Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
                 TextColor="#000000" />
 
             <Label
