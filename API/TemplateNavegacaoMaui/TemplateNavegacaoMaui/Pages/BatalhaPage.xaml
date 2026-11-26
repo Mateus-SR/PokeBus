@@ -75,13 +75,14 @@
                             <Setter TargetName="BattleTitle" Property="Label.FontSize" Value="34" />
                             <Setter TargetName="MainContentGrid" Property="Grid.ColumnDefinitions" Value="1.05*,2,0.95*" />
                             <Setter TargetName="MainContentGrid" Property="Grid.ColumnSpacing" Value="8" />
-                            <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="8,0" />
-                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,132" />
-                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="132" />
-                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="132" />
-                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="144,*" />
-                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.WidthRequest" Value="144" />
-                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.HeightRequest" Value="144" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
+                            <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="0" />
+                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,104" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="104" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="104" />
+                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="112,*" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.WidthRequest" Value="112" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.HeightRequest" Value="112" />
                             <Setter TargetName="PokemonDistanteLabel" Property="Label.FontSize" Value="28" />
                             <Setter TargetName="LinhaDistanteLabel" Property="Label.FontSize" Value="18" />
                             <Setter TargetName="SentidoDistanteLabel" Property="Label.FontSize" Value="18" />
