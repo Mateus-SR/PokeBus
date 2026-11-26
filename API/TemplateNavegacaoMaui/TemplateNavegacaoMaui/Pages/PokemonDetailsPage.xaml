@@ -47,6 +47,7 @@
                             <Setter TargetName="OnibusIdLabel" Property="Label.FontSize" Value="14" />
                             <Setter TargetName="PrevisaoLabel" Property="Label.FontSize" Value="20" />
                             <Setter TargetName="DetailsColumnsGrid" Property="Grid.ColumnDefinitions" Value="*" />
+                            <Setter TargetName="DetailsColumnsGrid" Property="Grid.RowDefinitions" Value="Auto,Auto" />
                             <Setter TargetName="InformationColumn" Property="Grid.Row" Value="0" />
                             <Setter TargetName="PokedexColumn" Property="Grid.Row" Value="1" />
                             <Setter TargetName="PokedexColumn" Property="Grid.Column" Value="0" />
@@ -127,7 +128,7 @@
                         FontFamily="PokemonEmerald"
                         FontSize="26"
                         HorizontalOptions="Start"
-                        x:Name="VoltarButton" Text="VOLTAR"
+                        Text="VOLTAR"
                         TextColor="White"
                         WidthRequest="120" />
 
