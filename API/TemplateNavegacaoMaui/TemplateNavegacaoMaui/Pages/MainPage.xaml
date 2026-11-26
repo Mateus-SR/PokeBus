@@ -41,12 +41,25 @@
               <Setter Property="Padding" Value="14" />
               <Setter TargetName="PageTitle" Property="Label.FontSize" Value="36" />
               <Setter TargetName="PageDescription" Property="Label.FontSize" Value="22" />
+              <Setter TargetName="ToolbarGrid" Property="Grid.ColumnDefinitions" Value="*" />
+              <Setter TargetName="ToolbarGrid" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
+              <Setter TargetName="InfoCard" Property="Grid.Row" Value="0" />
+              <Setter TargetName="InfoCard" Property="Grid.Column" Value="0" />
+              <Setter TargetName="StatusLabel" Property="Grid.Row" Value="1" />
+              <Setter TargetName="StatusLabel" Property="Grid.Column" Value="0" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Row" Value="2" />
+              <Setter TargetName="AtualizarButton" Property="Grid.Column" Value="0" />
               <Setter TargetName="InfoCard" Property="Label.FontSize" Value="20" />
               <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="20" />
               <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="20" />
               <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="22" />
               <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="22" />
             </VisualState.Setters>
+          </VisualState>
+          <VisualState x:Name="WideIntermediate">
+            <VisualState.StateTriggers>
+              <AdaptiveTrigger MinWindowWidth="800" />
+            </VisualState.StateTriggers>
           </VisualState>
           <VisualState x:Name="Expanded">
             <VisualState.StateTriggers>
