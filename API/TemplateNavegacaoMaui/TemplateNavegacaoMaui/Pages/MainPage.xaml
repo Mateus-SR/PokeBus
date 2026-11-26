@@ -187,7 +187,7 @@
                         <VisualState.Setters>
                           <Setter Property="ColumnDefinitions" Value="*,Auto,84" />
                           <Setter Property="ColumnSpacing" Value="6" />
-                          <Setter TargetName="LineInfo" Property="VisualElement.Margin" Value="8" />
+                          <Setter TargetName="LineInfo" Property="View.Margin" Value="8" />
                           <Setter TargetName="LineCode" Property="Label.FontSize" Value="30" />
                           <Setter TargetName="LineDirection" Property="Label.FontSize" Value="18" />
                           <Setter TargetName="PokemonName" Property="Label.FontSize" Value="18" />
@@ -204,7 +204,7 @@
                         <VisualState.Setters>
                           <Setter Property="ColumnDefinitions" Value="*,Auto,112" />
                           <Setter Property="ColumnSpacing" Value="8" />
-                          <Setter TargetName="LineInfo" Property="VisualElement.Margin" Value="12" />
+                          <Setter TargetName="LineInfo" Property="View.Margin" Value="12" />
                           <Setter TargetName="LineCode" Property="Label.FontSize" Value="38" />
                           <Setter TargetName="LineDirection" Property="Label.FontSize" Value="26" />
                           <Setter TargetName="PokemonName" Property="Label.FontSize" Value="22" />
