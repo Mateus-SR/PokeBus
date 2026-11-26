@@ -7,9 +7,52 @@
   BackgroundColor="{StaticResource PageBackground}"
 >
   <ScrollView>
-    <VerticalStackLayout Padding="24" Spacing="22" VerticalOptions="Center">
+    <VerticalStackLayout x:Name="PageContent" Padding="24" Spacing="22" VerticalOptions="Center">
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroupList>
+          <VisualStateGroup x:Name="ResponsiveStates">
+            <VisualState x:Name="Compact">
+              <VisualState.StateTriggers>
+                <AdaptiveTrigger MinWindowWidth="0" />
+              </VisualState.StateTriggers>
+              <VisualState.Setters>
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="14" />
+                <Setter TargetName="ArenaTitle" Property="Label.FontSize" Value="30" />
+                <Setter TargetName="ArenaSubtitle" Property="Label.FontSize" Value="22" />
+                <Setter TargetName="BattlesTitle" Property="Label.FontSize" Value="22" />
+                <Setter TargetName="BattlesDescription" Property="Label.FontSize" Value="18" />
+                <Setter TargetName="QuantityLabel" Property="Label.FontSize" Value="18" />
+                <Setter TargetName="BatalharButton" Property="Button.FontSize" Value="20" />
+                <Setter TargetName="FootnoteLabel" Property="Label.FontSize" Value="16" />
+              </VisualState.Setters>
+            </VisualState>
+            <VisualState x:Name="Intermediate">
+              <VisualState.StateTriggers>
+                <AdaptiveTrigger MinWindowWidth="600" />
+              </VisualState.StateTriggers>
+              <VisualState.Setters>
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="Spacing" Value="18" />
+                <Setter TargetName="ArenaTitle" Property="Label.FontSize" Value="36" />
+                <Setter TargetName="ArenaSubtitle" Property="Label.FontSize" Value="26" />
+                <Setter TargetName="BattlesTitle" Property="Label.FontSize" Value="26" />
+                <Setter TargetName="BattlesDescription" Property="Label.FontSize" Value="22" />
+                <Setter TargetName="QuantityLabel" Property="Label.FontSize" Value="22" />
+                <Setter TargetName="BatalharButton" Property="Button.FontSize" Value="24" />
+                <Setter TargetName="FootnoteLabel" Property="Label.FontSize" Value="20" />
+              </VisualState.Setters>
+            </VisualState>
+            <VisualState x:Name="Expanded">
+              <VisualState.StateTriggers>
+                <AdaptiveTrigger MinWindowWidth="1000" />
+              </VisualState.StateTriggers>
+            </VisualState>
+          </VisualStateGroup>
+        </VisualStateGroupList>
+      </VisualStateManager.VisualStateGroups>
       <Label
-        Text="POKÉBUS ARENA"
+        x:Name="ArenaTitle" Text="POKÉBUS ARENA"
         FontFamily="PokemonEmerald"
         FontSize="42"
         FontAttributes="Bold"
@@ -18,7 +61,7 @@
       />
 
       <Label
-        Text="Prepare-se para o confronto!"
+        x:Name="ArenaSubtitle" Text="Prepare-se para o confronto!"
         FontFamily="PokemonEmerald"
         FontSize="30"
         FontAttributes="Bold"
@@ -29,7 +72,7 @@
       <BoxView HeightRequest="2" Color="{StaticResource PrimaryColor}" />
 
       <Label
-        Text="BATALHAS ALEATÓRIAS"
+        x:Name="BattlesTitle" Text="BATALHAS ALEATÓRIAS"
         FontFamily="PokemonEmerald"
         FontSize="30"
         HorizontalTextAlignment="Center"
@@ -37,7 +80,7 @@
       />
 
       <Label
-        Text="Dois ônibus serão sorteados entre os veículos monitorados.&#10;Seus Pokémon lutarão em uma batalha decidida pelos próprios atributos."
+        x:Name="BattlesDescription" Text="Dois ônibus serão sorteados entre os veículos monitorados.&#10;Seus Pokémon lutarão em uma batalha decidida pelos próprios atributos."
         FontFamily="PokemonEmerald"
         FontSize="26"
         HorizontalTextAlignment="Center"
@@ -46,7 +89,7 @@
 
       <Label
         x:Name="QuantidadeLabel"
-        Text="Verificando Pokémon disponíveis..."
+        x:Name="QuantityLabel" Text="Verificando Pokémon disponíveis..."
         FontFamily="PokemonEmerald"
         FontSize="26"
         HorizontalTextAlignment="Center"
@@ -65,7 +108,7 @@
       />
 
       <Label
-        Text="A narração será produzida pelo Gemini AI,&#10;com base nas estastísticas de cada Pokémon (vinda da PokeAPI)&#10;e na simulação da batalha feita em segundo plano.&#10;Os Pokémons representam os ônibus."
+        x:Name="FootnoteLabel" Text="A narração será produzida pelo Gemini AI,&#10;com base nas estastísticas de cada Pokémon (vinda da PokeAPI)&#10;e na simulação da batalha feita em segundo plano.&#10;Os Pokémons representam os ônibus."
         FontFamily="PokemonEmerald"
         FontSize="26"
         HorizontalTextAlignment="Center"
