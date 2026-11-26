@@ -8,13 +8,62 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="ResponsiveStates">
+                        <VisualState x:Name="Compact">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="12" />
+                                <Setter Property="Spacing" Value="12" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="28" />
+                                <Setter TargetName="ProjectIntro" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="ApiDescription" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="PokemonMapping" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="BattleHeading" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="BattleMechanics" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="BattleNarration" Property="Label.FontSize" Value="18" />
+                                <Setter TargetName="PokedexHeading" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="PokedexDescription" Property="Label.FontSize" Value="18" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Intermediate">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="600" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Property="Padding" Value="18" />
+                                <Setter Property="Spacing" Value="14" />
+
+                                <Setter TargetName="PageHeading" Property="Label.FontSize" Value="34" />
+                                <Setter TargetName="ProjectIntro" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="ApiDescription" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="PokemonMapping" Property="Label.FontSize" Value="24" />
+                                <Setter TargetName="BattleHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="BattleMechanics" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="BattleNarration" Property="Label.FontSize" Value="22" />
+                                <Setter TargetName="PokedexHeading" Property="Label.FontSize" Value="26" />
+                                <Setter TargetName="PokedexDescription" Property="Label.FontSize" Value="22" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Expanded">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="1000" />
+                            </VisualState.StateTriggers>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </VisualStateManager.VisualStateGroups>
 
             <Label
                 FontAttributes="Bold"
                 FontFamily="PokemonEmerald"
                 FontSize="40"
                 HorizontalTextAlignment="Center"
-                Text="Sobre o projeto"
+                x:Name="PageHeading" Text="Sobre o projeto"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <!--  Texto original preservado  -->
@@ -22,21 +71,21 @@
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="Esse projeto é um aplicativo de exemplo desenvolvido em .NET MAUI, inspirado no universo Pokémon, no uso de IA Generativa e no projeto Busca Bus, PI do 4º Semestre de DSM. Ele demonstra a navegação entre páginas (pilha, menu lateral, aba), o uso de recursos visuais e a integração com APIs externas, comunicando entre si para a construção de uma nova aplicação."
+                x:Name="ProjectIntro" Text="Esse projeto é um aplicativo de exemplo desenvolvido em .NET MAUI, inspirado no universo Pokémon, no uso de IA Generativa e no projeto Busca Bus, PI do 4º Semestre de DSM. Ele demonstra a navegação entre páginas (pilha, menu lateral, aba), o uso de recursos visuais e a integração com APIs externas, comunicando entre si para a construção de uma nova aplicação."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
+                x:Name=""ApiDescription"" Text="As APIs usadas são: Gemini API, PokeAPI e Olho Vivo (reutilizando a versão tratada no backend do Busca Bus)."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="30"
                 HorizontalTextAlignment="Center"
-                Text="Para associar um Pokémon a um ônibus, usamos os últimos 3 dígitos do ID do veículo, que são convertidos em um número entre 1 e 999, (infelizmente sacrificando números maiores que 999). O Pokémon cujo ID na PokéDex corresponde a esse número é então associado ao ônibus."
+                x:Name="PokemonMapping" Text="Para associar um Pokémon a um ônibus, usamos os últimos 3 dígitos do ID do veículo, que são convertidos em um número entre 1 e 999, (infelizmente sacrificando números maiores que 999). O Pokémon cujo ID na PokéDex corresponde a esse número é então associado ao ônibus."
                 TextColor="Gray" />
 
             <BoxView
@@ -49,32 +98,32 @@
                 FontAttributes="Bold"
                 FontFamily="PokemonEmerald"
                 FontSize="30"
-                Text="Como funcionam as batalhas"
+                x:Name="BattleHeading" Text="Como funcionam as batalhas"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="26"
-                Text="As batalhas são simuladas pelo próprio sistema do aplicativo. São considerados atributos como HP, ataque, defesa, velocidade e efetividade dos tipos. Os golpes utilizados também são obtidos da PokéAPI, incluindo suas características."
+                x:Name="BattleMechanics" Text="As batalhas são simuladas pelo próprio sistema do aplicativo. São considerados atributos como HP, ataque, defesa, velocidade e efetividade dos tipos. Os golpes utilizados também são obtidos da PokéAPI, incluindo suas características."
                 TextColor="#000000" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="26"
-                Text="O sistema calcula os danos, executa os turnos e determina o vencedor. O Gemini recebe o relatório da batalha e transforma os acontecimentos em uma narração dinâmica, sem interferir no resultado."
+                x:Name="BattleNarration" Text="O sistema calcula os danos, executa os turnos e determina o vencedor. O Gemini recebe o relatório da batalha e transforma os acontecimentos em uma narração dinâmica, sem interferir no resultado."
                 TextColor="#000000" />
 
             <Label
                 FontAttributes="Bold"
                 FontFamily="PokemonEmerald"
                 FontSize="30"
-                Text="Tradução da Pokédex"
+                x:Name="PokedexHeading" Text="Tradução da Pokédex"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <Label
                 FontFamily="PokemonEmerald"
                 FontSize="26"
-                Text="As descrições dos Pokémon são obtidas originalmente em inglês pela PokéAPI. Quando os detalhes de um Pokémon são acessados, o Gemini traduz a descrição para português brasileiro. As traduções são mantidas em memória durante a execução do aplicativo para evitar chamadas repetidas."
+                x:Name="PokedexDescription" Text="As descrições dos Pokémon são obtidas originalmente em inglês pela PokéAPI. Quando os detalhes de um Pokémon são acessados, o Gemini traduz a descrição para português brasileiro. As traduções são mantidas em memória durante a execução do aplicativo para evitar chamadas repetidas."
                 TextColor="#000000" />
 
         </VerticalStackLayout>
