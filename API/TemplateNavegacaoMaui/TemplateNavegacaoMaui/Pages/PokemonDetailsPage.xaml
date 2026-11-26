@@ -427,6 +427,12 @@
                                                 <VisualState.Setters>
                                                     <Setter Property="FlexLayout.Basis" Value="46%" />
                                                     <Setter Property="Padding" Value="10" />
+                                                    <Setter TargetName="MoveName" Property="Label.FontSize" Value="18" />
+                                                    <Setter TargetName="MoveType" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="PowerTitle" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="PowerValue" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="AccuracyTitle" Property="Label.FontSize" Value="14" />
+                                                    <Setter TargetName="AccuracyValue" Property="Label.FontSize" Value="16" />
                                                 </VisualState.Setters>
                                             </VisualState>
                                             <VisualState x:Name="Intermediate">
@@ -435,6 +441,12 @@
                                                 </VisualState.StateTriggers>
                                                 <VisualState.Setters>
                                                     <Setter Property="FlexLayout.Basis" Value="30%" />
+                                                    <Setter TargetName="MoveName" Property="Label.FontSize" Value="22" />
+                                                    <Setter TargetName="MoveType" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="PowerTitle" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="PowerValue" Property="Label.FontSize" Value="18" />
+                                                    <Setter TargetName="AccuracyTitle" Property="Label.FontSize" Value="16" />
+                                                    <Setter TargetName="AccuracyValue" Property="Label.FontSize" Value="18" />
                                                 </VisualState.Setters>
                                             </VisualState>
                                             <VisualState x:Name="Expanded">
@@ -460,7 +472,7 @@
                                             FontFamily="PokemonEmerald"
                                             FontSize="26"
                                             LineBreakMode="WordWrap"
-                                            Text="{Binding Nome}"
+                                            x:Name="MoveName" Text="{Binding Nome}"
                                             TextColor="#263D3A"
                                             TextTransform="Uppercase"
                                             VerticalTextAlignment="Center" />
@@ -471,7 +483,7 @@
                                             FontFamily="PokemonEmerald"
                                             FontSize="18"
                                             HorizontalTextAlignment="End"
-                                            Text="{Binding Tipo}"
+                                            x:Name="MoveType" Text="{Binding Tipo}"
                                             TextColor="{StaticResource PrimaryColor}"
                                             VerticalTextAlignment="Center" />
 
@@ -486,13 +498,13 @@
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="16"
-                                                Text="Potência"
+                                                x:Name="PowerTitle" Text="Potência"
                                                 TextColor="Gray" />
 
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="20"
-                                                Text="{Binding Potencia}"
+                                                x:Name="PowerValue" Text="{Binding Potencia}"
                                                 TextColor="#263D3A" />
                                         </VerticalStackLayout>
 
@@ -501,13 +513,13 @@
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="16"
-                                                Text="Precisão"
+                                                x:Name="AccuracyTitle" Text="Precisão"
                                                 TextColor="Gray" />
 
                                             <Label
                                                 FontFamily="PokemonEmerald"
                                                 FontSize="20"
-                                                Text="{Binding Precisao, StringFormat='{0}%'}"
+                                                x:Name="AccuracyValue" Text="{Binding Precisao, StringFormat='{0}%'}"
                                                 TextColor="#263D3A" />
                                         </VerticalStackLayout>
 
