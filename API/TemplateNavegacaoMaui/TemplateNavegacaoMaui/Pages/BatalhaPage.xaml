@@ -8,9 +8,108 @@
     BackgroundColor="{StaticResource PageBackground}">
 
     <Grid
+        x:Name="PageLayout"
         Margin="24,10"
         RowDefinitions="Auto,*"
         RowSpacing="10">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="ResponsiveStates">
+                    <VisualState x:Name="Compact">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="Margin" Value="8,6" />
+                            <Setter TargetName="BattleTitle" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnDefinitions" Value="*" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.RowDefinitions" Value="Auto,2,*" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnSpacing" Value="0" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.RowSpacing" Value="8" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.Row" Value="0" />
+                            <Setter TargetName="BattleFieldPanel" Property="Grid.RowDefinitions" Value="Auto,Auto,Auto" />
+                            <Setter TargetName="LayoutDivider" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="LayoutDivider" Property="Grid.Row" Value="1" />
+                            <Setter TargetName="LayoutDivider" Property="VisualElement.WidthRequest" Value="0" />
+                            <Setter TargetName="LayoutDivider" Property="VisualElement.HeightRequest" Value="2" />
+                            <Setter TargetName="LayoutDivider" Property="VisualElement.HorizontalOptions" Value="Fill" />
+                            <Setter TargetName="LayoutDivider" Property="VisualElement.VerticalOptions" Value="Center" />
+                            <Setter TargetName="NarrationPanel" Property="Grid.Column" Value="0" />
+                            <Setter TargetName="NarrationPanel" Property="Grid.Row" Value="2" />
+                            <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="0" />
+                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,108" />
+                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnSpacing" Value="6" />
+                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="120,*" />
+                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnSpacing" Value="4" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="108" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="108" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.WidthRequest" Value="120" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.HeightRequest" Value="120" />
+                            <Setter TargetName="PokemonDistanteLabel" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="LinhaDistanteLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="SentidoDistanteLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="HpDistanteLabel" Property="Label.FontSize" Value="14" />
+                            <Setter TargetName="PokemonProximoLabel" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="LinhaProximoLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="SentidoProximoLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="HpProximoLabel" Property="Label.FontSize" Value="14" />
+                            <Setter TargetName="ResultadoLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="InverterPerspectivaButton" Property="Button.FontSize" Value="16" />
+                            <Setter TargetName="NarrationTitle" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="ModeloLabel" Property="Label.FontSize" Value="12" />
+                            <Setter TargetName="NarracaoLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="TentarNovamenteButton" Property="Button.FontSize" Value="16" />
+                            <Setter TargetName="ConfigurarChaveButton" Property="Button.FontSize" Value="16" />
+                            <Setter TargetName="VoltarButton" Property="Button.FontSize" Value="16" />
+                            <Setter TargetName="SortearNovamenteButton" Property="Button.FontSize" Value="16" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Intermediate">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="600" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="Margin" Value="12,8" />
+                            <Setter TargetName="BattleTitle" Property="Label.FontSize" Value="34" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnDefinitions" Value="1.05*,2,0.95*" />
+                            <Setter TargetName="MainContentGrid" Property="Grid.ColumnSpacing" Value="8" />
+                            <Setter TargetName="BattlePositionsGrid" Property="View.Margin" Value="8,0" />
+                            <Setter TargetName="PokemonDistanteRow" Property="Grid.ColumnDefinitions" Value="*,132" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.WidthRequest" Value="132" />
+                            <Setter TargetName="PokemonDistanteImage" Property="VisualElement.HeightRequest" Value="132" />
+                            <Setter TargetName="PokemonProximoRow" Property="Grid.ColumnDefinitions" Value="144,*" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.WidthRequest" Value="144" />
+                            <Setter TargetName="PokemonProximoImage" Property="VisualElement.HeightRequest" Value="144" />
+                            <Setter TargetName="PokemonDistanteLabel" Property="Label.FontSize" Value="28" />
+                            <Setter TargetName="LinhaDistanteLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="SentidoDistanteLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="HpDistanteLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="PokemonProximoLabel" Property="Label.FontSize" Value="28" />
+                            <Setter TargetName="LinhaProximoLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="SentidoProximoLabel" Property="Label.FontSize" Value="18" />
+                            <Setter TargetName="HpProximoLabel" Property="Label.FontSize" Value="16" />
+                            <Setter TargetName="ResultadoLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="InverterPerspectivaButton" Property="Button.FontSize" Value="18" />
+                            <Setter TargetName="NarrationTitle" Property="Label.FontSize" Value="26" />
+                            <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="20" />
+                            <Setter TargetName="ModeloLabel" Property="Label.FontSize" Value="14" />
+                            <Setter TargetName="NarracaoLabel" Property="Label.FontSize" Value="22" />
+                            <Setter TargetName="TentarNovamenteButton" Property="Button.FontSize" Value="18" />
+                            <Setter TargetName="ConfigurarChaveButton" Property="Button.FontSize" Value="18" />
+                            <Setter TargetName="VoltarButton" Property="Button.FontSize" Value="18" />
+                            <Setter TargetName="SortearNovamenteButton" Property="Button.FontSize" Value="18" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Expanded">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="1000" />
+                        </VisualState.StateTriggers>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </VisualStateManager.VisualStateGroups>
 
         <!--  CABEÇALHO  -->
         <VerticalStackLayout Grid.Row="0" Spacing="8">
@@ -19,7 +118,7 @@
                 FontFamily="PokemonEmerald"
                 FontSize="40"
                 HorizontalTextAlignment="Center"
-                Text="BATALHA POKÉBUS"
+                x:Name="BattleTitle" Text="BATALHA POKÉBUS"
                 TextColor="{StaticResource PrimaryColor}" />
 
             <BoxView HeightRequest="2" Color="{StaticResource PrimaryColor}" />
@@ -28,17 +127,19 @@
 
         <!--  CONTEÚDO PRINCIPAL  -->
         <Grid
+            x:Name="MainContentGrid"
             Grid.Row="1"
             ColumnDefinitions="0.92*,2,1.08*"
             ColumnSpacing="12">
 
 
             <!--  CAMPO DE BATALHA  -->
-            <Grid Grid.Column="0" RowDefinitions="*,Auto,Auto">
+            <Grid x:Name="BattleFieldPanel" Grid.Column="0" RowDefinitions="*,Auto,Auto">
 
 
                 <!--  POSIÇÕES FIXAS DOS POKÉMON  -->
                 <Grid
+                    x:Name="BattlePositionsGrid"
                     Grid.Row="0"
                     Margin="55,0,55,0"
                     RowDefinitions="Auto,Auto"
@@ -46,6 +147,7 @@
 
                     <!--  POKÉMON DISTANTE: SUPERIOR DIREITO  -->
                     <Grid
+                        x:Name="PokemonDistanteRow"
                         Grid.Row="0"
                         ColumnDefinitions="*,216"
                         ColumnSpacing="16"
@@ -109,6 +211,7 @@
 
                     <!--  POKÉMON PRÓXIMO: INFERIOR ESQUERDO  -->
                     <Grid
+                        x:Name="PokemonProximoRow"
                         Grid.Row="1"
                         ColumnDefinitions="288,*"
                         ColumnSpacing="4"
@@ -198,6 +301,7 @@
 
             <!--  DIVISÓRIA  -->
             <BoxView
+                x:Name="LayoutDivider"
                 Grid.Column="1"
                 HorizontalOptions="Center"
                 VerticalOptions="Fill"
@@ -206,6 +310,7 @@
 
             <!--  NARRAÇÃO DO GEMINI  -->
             <Grid
+                x:Name="NarrationPanel"
                 Grid.Column="2"
                 RowDefinitions="Auto,Auto,*,Auto"
                 RowSpacing="10">
@@ -217,7 +322,7 @@
                         FontFamily="PokemonEmerald"
                         FontSize="30"
                         HorizontalTextAlignment="Center"
-                        Text="NARRAÇÃO DA BATALHA"
+                        x:Name="NarrationTitle" Text="NARRAÇÃO DA BATALHA"
                         TextColor="{StaticResource PrimaryColor}" />
 
                     <BoxView HeightRequest="1" Color="{StaticResource PrimaryColor}" />
