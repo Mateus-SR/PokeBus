@@ -52,8 +52,6 @@
               <Setter TargetName="InfoCard" Property="Label.FontSize" Value="20" />
               <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="20" />
               <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="20" />
-              <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="22" />
-              <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="22" />
             </VisualState.Setters>
           </VisualState>
           <VisualState x:Name="WideIntermediate">
