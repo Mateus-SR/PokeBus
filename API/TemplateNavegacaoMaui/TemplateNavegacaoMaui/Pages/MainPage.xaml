@@ -31,8 +31,6 @@
               <Setter TargetName="InfoCard" Property="Label.FontSize" Value="16" />
               <Setter TargetName="StatusLabel" Property="Label.FontSize" Value="16" />
               <Setter TargetName="AtualizarButton" Property="Button.FontSize" Value="16" />
-              <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="20" />
-              <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="18" />
             </VisualState.Setters>
           </VisualState>
           <VisualState x:Name="Intermediate">
@@ -113,6 +111,35 @@
       <CollectionView ItemsSource="{Binding Onibus}" SelectionMode="None">
         <CollectionView.EmptyView>
           <VerticalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="Center">
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroupList>
+                <VisualStateGroup x:Name="EmptyViewStates">
+                  <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                      <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="20" />
+                      <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="18" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Intermediate">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                      <Setter TargetName="EmptyTitle" Property="Label.FontSize" Value="22" />
+                      <Setter TargetName="EmptyDescription" Property="Label.FontSize" Value="22" />
+                    </VisualState.Setters>
+                  </VisualState>
+                  <VisualState x:Name="Expanded">
+                    <VisualState.StateTriggers>
+                      <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateGroupList>
+            </VisualStateManager.VisualStateGroups>
             <Label
               x:Name="EmptyTitle"
               Text="Nenhum veículo para exibir"
